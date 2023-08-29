@@ -2,8 +2,12 @@ package com.httm.WebBanThuocTay.entity.main;
 
 import java.util.Collection;
 
+import com.httm.WebBanThuocTay.entity.sub.DonHang;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -75,21 +80,42 @@ public class Thuoc {
     // (n-n) Thuốc - đối tượng sử dụng
     @ManyToMany
     @JoinTable(name = "DoiTuongDungThuoc", joinColumns = @JoinColumn(name = "idThuoc"), inverseJoinColumns = @JoinColumn(name = "idDoiTuongSD"))
-    protected Collection<DoiTuongSuDung> doiTuongSuDungs;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<DoiTuongSuDung> doiTuongSuDungs;
 
     // (n-n) Thuốc - đối tượng chỉ định
     @ManyToMany
     @JoinTable(name = "DoiTuongChiDinhThuoc", joinColumns = @JoinColumn(name = "idThuoc"), inverseJoinColumns = @JoinColumn(name = "idDoiTuongCD"))
-    protected Collection<DoiTuongChiDinh> doiTuongChiDinhs;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<DoiTuongChiDinh> doiTuongChiDinhs;
 
     // (n-n) Thuốc - thành phần
     @ManyToMany
     @JoinTable(name = "ChiTietThanhPhan", joinColumns = @JoinColumn(name = "idThuoc"), inverseJoinColumns = @JoinColumn(name = "idThanhPhan"))
-    protected Collection<ThanhPhanThuoc> thanhPhanThuocs;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<ThanhPhanThuoc> thanhPhanThuocs;
 
-    // (n-n) Thuốc - thành phần
+    // (n-n) Thuốc - đơn vị tính
     @ManyToMany
     @JoinTable(name = "ChiTietDonViTinh", joinColumns = @JoinColumn(name = "idThuoc"), inverseJoinColumns = @JoinColumn(name = "idDonViTinh"))
-    protected Collection<DonViTinh> donViTinhs;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<DonViTinh> donViTinhs;
+
+    // (n-n) Thuốc - đơn hàng
+    @ManyToMany
+    @JoinTable(name = "ChiTietDonHang", joinColumns = @JoinColumn(name = "idThuoc"), inverseJoinColumns = @JoinColumn(name = "idDonHang"))
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<DonHang> donHangs;
+
+    // Một sản phẩm thuốc có nhiều hình ảnh
+    @OneToMany(mappedBy = "thuoc", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<HinhAnhThuoc> hinhAnhThuocs;
 
 }

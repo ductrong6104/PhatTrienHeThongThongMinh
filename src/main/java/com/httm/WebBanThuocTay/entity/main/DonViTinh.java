@@ -13,7 +13,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "DonViTinh")
@@ -33,6 +35,8 @@ public class DonViTinh {
     // (n-n) Đối tượng sử dụng - thuốc
     @ManyToMany
     @JoinTable(name = "ChiTietDonViTinh", joinColumns = @JoinColumn(name = "idDonViTinh"), inverseJoinColumns = @JoinColumn(name = "idThuoc"))
-    protected Collection<Thuoc> thuocs;
+        @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<Thuoc> thuocs;
 
 }
