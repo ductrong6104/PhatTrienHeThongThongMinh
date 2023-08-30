@@ -1,8 +1,6 @@
-package com.httm.WebBanThuocTay.entity.sub;
+package com.httm.WebBanThuocTay.model;
 
 import java.sql.Date;
-
-import com.httm.WebBanThuocTay.entity.main.Thuoc;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,34 +17,28 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "BinhLuanSanPham")
+@Table(name = "DanhGiaSanPham")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BinhLuanSanPham {
-
+public class DanhGiaSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idBinhLuan")
-    private int id;
-
+    @Column(name = "idDanhGiaSanPham")
+    private Integer id;
+    @Column(name = "soSao")
+    private Integer soSao;
     @Column(name = "thoiGian")
     private Date thoiGian;
 
-    @Column(name = "noiDung")
-    private String noiDung;
-
-    @Column(name = "idBinhLuanReply")
-    private String idBinhLuanReply;
-
-    // Một bình luận bởi một khách hàng
+    // Một đánh giá bởi một khách hàng
     @ManyToOne
     @JoinColumn(name = "idKhachHang")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private KhachHang khachHang;
 
-    // Một bình luận bình luận một sản phẩm thuốc
+    // Một đánh giá đánh giá một sản phẩm thuốc
     @ManyToOne
     @JoinColumn(name = "idThuoc")
     @EqualsAndHashCode.Exclude

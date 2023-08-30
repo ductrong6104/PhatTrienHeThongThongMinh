@@ -1,8 +1,6 @@
-package com.httm.WebBanThuocTay.entity.sub;
+package com.httm.WebBanThuocTay.model;
 
 import java.util.Collection;
-
-import com.httm.WebBanThuocTay.entity.main.Thuoc;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,10 +28,10 @@ public class DonHang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idDonHang")
-    private int id;
+    private Integer id;
 
     @Column(name = "hoTenNguoiNhan")
-    private String hoTenNguoiNhan;
+    private String hoTen;
 
     @Column(name = "sdt")
     private String sdt;
@@ -45,7 +43,7 @@ public class DonHang {
     private boolean hinhThucMua;
 
     @Column(name = "trangThaiDonHang")
-    private int trangThaiDonHang;
+    private int trangThai;
 
     // Một đơn hàng có một hình thức thanh toán
     @ManyToOne
@@ -62,8 +60,7 @@ public class DonHang {
     private KhachHang khachHang;
 
     // (n-n) Đơn hàng - Thuốc
-    @ManyToMany
-    @JoinTable(name = "ChiTietDonHang", joinColumns = @JoinColumn(name = "idDonHang"), inverseJoinColumns = @JoinColumn(name = "idThuoc"))
+    @ManyToMany(mappedBy = "donHangs")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Thuoc> thuocs;

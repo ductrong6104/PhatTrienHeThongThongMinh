@@ -1,9 +1,7 @@
-package com.httm.WebBanThuocTay.entity.main;
+package com.httm.WebBanThuocTay.model;
 
 
 import java.util.Collection;
-
-import com.httm.WebBanThuocTay.entity.other.QuocGia;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -40,8 +38,8 @@ public class ThuongHieu {
     @Column(name = "mota", unique = true)
     private String mota;
 
-    @Column(name = "avataThuongHieu", unique = true)
-    private String avata;
+    @Column(name = "avatarThuongHieu", unique = true)
+    private String avatar;
 
     // Một thương hiệu thuộc một quốc gia
     @ManyToOne
@@ -51,7 +49,7 @@ public class ThuongHieu {
     private QuocGia quocGia;
 
     // Một thương hiệu có nhiều sản phẩm thuốc
-    @OneToMany(mappedBy = "thuongHieu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "thuongHieu", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Thuoc> Thuoc;

@@ -1,10 +1,7 @@
-package com.httm.WebBanThuocTay.entity.main;
+package com.httm.WebBanThuocTay.model;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,25 +15,25 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "HinhAnhThuoc")
+@Table(name = "DanhMucThuoc")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Embeddable
-public class HinhAnhThuoc {
-
+public class DanhMucThuoc {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idHinhAnh")
-    private int idHinhAnh;
+    @Column(name = "idDanhMuc")
+    private Integer id;
 
-    @Column(name = "hinhAnh", unique = true)
-    private String hinhAnh;
-    //Một hình ảnh cho một sản phẩm thuốc
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idThuoc")
+    @Column(name = "tenDanhMuc" , unique = true)
+    private String ten;
+
+    //Một danh mục thuốc thuộc một nhóm thuốc
+    @ManyToOne
+    @JoinColumn(name = "idNhom")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Thuoc thuoc;
+    private NhomThuoc nhomThuoc;
 
 }

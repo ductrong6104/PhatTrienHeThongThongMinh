@@ -1,4 +1,6 @@
-package com.httm.WebBanThuocTay.entity.main;
+package com.httm.WebBanThuocTay.model;
+
+import java.util.Collection;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,7 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,25 +18,24 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "DanhMucThuoc")
+@Table(name = "DoiTuongChiDinh")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DanhMucThuoc {
-    
+public class DoiTuongChiDinh {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idDanhMuc")
-    private int id;
+    @Column(name = "idDoiTuongChiDinh")
+    private Integer id;
 
-    @Column(name = "tenDanhMuc" , unique = true)
+    @Column(name = "tenDoiTuongCD", unique = true)
     private String ten;
 
-    //Một danh mục thuốc thuộc một nhóm thuốc
-    @ManyToOne
-    @JoinColumn(name = "idNhom")
+    // (n-n) Đối tượng chỉ định - thuốc
+    @ManyToMany(mappedBy = "doiTuongChiDinhs")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private NhomThuoc nhomThuoc;
+    private Collection<Thuoc> thuocs;
 
 }

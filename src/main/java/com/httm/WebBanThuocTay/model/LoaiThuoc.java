@@ -1,8 +1,6 @@
-package com.httm.WebBanThuocTay.entity.other;
+package com.httm.WebBanThuocTay.model;
 
 import java.util.Collection;
-
-import com.httm.WebBanThuocTay.entity.main.ThuongHieu;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,24 +18,23 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "QuocGia")
+@Table(name = "LoaiThuoc")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuocGia {
+public class LoaiThuoc {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idQuocGia")
-    private int id;
+    @Column(name = "idLoai")
+    private Integer id;
 
-    @Column(name = "tenQuocGia", unique = true)
+    @Column(name = "tenLoai", unique = true)
     private String ten;
 
-    // Một quốc gia có nhiều thương hiệu
-    @OneToMany(mappedBy = "quocGia", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    // Một loại thuốc có nhiều nhóm thuốc
+    @OneToMany(mappedBy = "loaiThuoc", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<ThuongHieu> thuongHieu;
-
+    private Collection<NhomThuoc> nhomThuoc;
 }

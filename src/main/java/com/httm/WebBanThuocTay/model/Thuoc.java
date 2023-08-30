@@ -1,8 +1,6 @@
-package com.httm.WebBanThuocTay.entity.main;
+package com.httm.WebBanThuocTay.model;
 
 import java.util.Collection;
-
-import com.httm.WebBanThuocTay.entity.sub.DonHang;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,24 +15,21 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name = "Thuoc")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Thuoc {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idThuoc")
-    private int id;
+    private Integer id;
 
+    @NonNull
     @Column(name = "tenThuoc", unique = true)
     private String ten;
 
@@ -56,7 +51,12 @@ public class Thuoc {
     @Column(name = "luuY")
     private String luuY;
 
+    public Thuoc(@NonNull String ten) {
+        this.ten = ten;
+    }
+
     // Một sản phẩm thuốc thuộc một thương hiệu
+    //@NonNull
     @ManyToOne
     @JoinColumn(name = "idThuongHieu")
     @EqualsAndHashCode.Exclude
@@ -64,6 +64,7 @@ public class Thuoc {
     private ThuongHieu thuongHieu;
 
     // Một sản phẩm thuốc thuộc một danh mục
+    //@NonNull
     @ManyToOne
     @JoinColumn(name = "idDanhMuc")
     @EqualsAndHashCode.Exclude
@@ -78,6 +79,10 @@ public class Thuoc {
     private DangBaoChe dangBaoChe;
 
     // (n-n) Thuốc - đối tượng sử dụng
+    // @JoinTable voi :
+    // name: la ten table sinh ra tu mqh n-n trong sql,
+    // joinColumn: ten cot khoa ngoai trong table n-n,
+    // inverseJoinColumns: ten cot khoa ngoai con lai trong table n-n
     @ManyToMany
     @JoinTable(name = "DoiTuongDungThuoc", joinColumns = @JoinColumn(name = "idThuoc"), inverseJoinColumns = @JoinColumn(name = "idDoiTuongSD"))
     @EqualsAndHashCode.Exclude
@@ -113,9 +118,10 @@ public class Thuoc {
     private Collection<DonHang> donHangs;
 
     // Một sản phẩm thuốc có nhiều hình ảnh
-    @OneToMany(mappedBy = "thuoc", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "thuoc", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<HinhAnhThuoc> hinhAnhThuocs;
+
 
 }

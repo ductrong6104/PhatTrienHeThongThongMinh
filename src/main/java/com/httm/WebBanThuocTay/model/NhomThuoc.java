@@ -1,4 +1,4 @@
-package com.httm.WebBanThuocTay.entity.main;
+package com.httm.WebBanThuocTay.model;
 
 import java.util.Collection;
 
@@ -29,7 +29,7 @@ public class NhomThuoc {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idNhom")
-    private int id;
+    private Integer id;
 
     @Column(name = "tenNhom" , unique = true)
     private String ten;
@@ -42,7 +42,7 @@ public class NhomThuoc {
     private LoaiThuoc loaiThuoc;
 
     //Một nhóm thuốc có nhiều danh mục thuốc
-    @OneToMany(mappedBy = "nhomThuoc", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "nhomThuoc", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<DanhMucThuoc> danhMucThuoc; 

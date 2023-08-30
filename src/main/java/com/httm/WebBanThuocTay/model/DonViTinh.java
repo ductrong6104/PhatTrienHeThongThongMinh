@@ -1,4 +1,4 @@
-package com.httm.WebBanThuocTay.entity.main;
+package com.httm.WebBanThuocTay.model;
 
 import java.util.Collection;
 
@@ -18,23 +18,22 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "DoiTuongChiDinh")
+@Table(name = "DonViTinh")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoiTuongChiDinh {
+public class DonViTinh {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idDoiTuongChiDinh")
-    private int id;
+    @Column(name = "idDonViTinh")
+    private Integer id;
 
-    @Column(name = "tenDoiTuongCD", unique = true)
-    private String ten;
+    @Column(name = "donViTinh", unique = true)
+    private Integer donVi;
 
-    // (n-n) Đối tượng chỉ định - thuốc
-    @ManyToMany
-    @JoinTable(name = "DoiTuongDungThuoc", joinColumns = @JoinColumn(name = "idDoiTuongSD"), inverseJoinColumns = @JoinColumn(name = "idThuoc"))
+    // (n-n) Đối tượng sử dụng - thuốc
+    @ManyToMany(mappedBy = "donViTinhs")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Thuoc> thuocs;

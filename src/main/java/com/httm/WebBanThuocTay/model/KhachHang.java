@@ -1,4 +1,4 @@
-package com.httm.WebBanThuocTay.entity.sub;
+package com.httm.WebBanThuocTay.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,18 +11,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "HinhThucThanhToan")
+@Table(name = "KhachHang")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HinhThucThanhToan {
+public class KhachHang {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idHinhThucThanhToan")
-    private int id;
+    @Column(name = "idKhachHang")
+    private Integer id;
 
-    @Column(name = "tenHinhThucThanhToan")
-    private String ten;
+    @Column(name = "hoTen")
+    private String hoTen;
+
+    @Column(name = "sdt")
+    private String sdt;
+
+    @Column(name = "email", unique = true)
+    private String email;
 
 }

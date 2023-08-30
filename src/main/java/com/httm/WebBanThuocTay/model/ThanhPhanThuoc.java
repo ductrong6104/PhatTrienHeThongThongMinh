@@ -1,4 +1,4 @@
-package com.httm.WebBanThuocTay.entity.main;
+package com.httm.WebBanThuocTay.model;
 
 
 import java.util.Collection;
@@ -20,6 +20,7 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "ThanhPhanThuoc")
+//@Data: A shortcut for @ToString, @EqualsAndHashCode, @Getter on all fields, @Setter on all non-final fields, and @RequiredArgsConstructor!
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +29,7 @@ public class ThanhPhanThuoc {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idThanhPhan")
-    private int id;
+    private Integer id;
 
     @Column(name = "tenThanhPhan", unique = true)
     private String ten;
@@ -38,9 +39,8 @@ public class ThanhPhanThuoc {
 
     
     // (n-n) Đối tượng sử dụng - thuốc
-    @ManyToMany
-    @JoinTable(name = "DoiTuongDungThuoc", joinColumns = @JoinColumn(name = "idThanhPhan"), inverseJoinColumns = @JoinColumn(name = "idThuoc"))
-        @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "thanhPhanThuocs")
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Thuoc> thuocs;
 

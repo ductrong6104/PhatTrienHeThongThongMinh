@@ -1,4 +1,4 @@
-package com.httm.WebBanThuocTay.entity.main;
+package com.httm.WebBanThuocTay.model;
 
 import java.util.Collection;
 
@@ -27,14 +27,14 @@ public class DoiTuongSuDung {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idDoiTuongSuDung")
-    private int id;
+    private Integer id;
 
     @Column(name = "tenDoiTuongSD", unique = true)
     private String ten;
 
     // (n-n) Đối tượng sử dụng - thuốc
-    @ManyToMany
-    @JoinTable(name = "DoiTuongDungThuoc", joinColumns = @JoinColumn(name = "idDoiTuongSD"), inverseJoinColumns = @JoinColumn(name = "idThuoc"))
+    // mappedBy: ten object n-n trong class Thuoc
+    @ManyToMany(mappedBy = "doiTuongSuDungs")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Thuoc> thuocs;
