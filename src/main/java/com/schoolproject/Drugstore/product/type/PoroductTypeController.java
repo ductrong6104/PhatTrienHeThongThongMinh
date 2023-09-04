@@ -1,6 +1,10 @@
 package com.schoolproject.Drugstore.product.type;
 
+import java.util.Collection;
+
+import org.hibernate.mapping.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,8 +40,19 @@ public class PoroductTypeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> edit(@PathVariable(name = "id") Integer id, @RequestBody ProductTypeDto productTypeDto) {
-        ProductTypeDto result = productTypeService.create(productTypeDto);
+        ProductTypeDto result = productTypeService.edit(id, productTypeDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable(name = "id") Integer id) {
+        ProductTypeDto result = productTypeService.delete(id);
+        return ResponseEntity.ok().body(result != null ? result : new Object());
+    }
+
+        @DeleteMapping("/")
+    public ResponseEntity<?> delete() throws Exception{
+        Collection<ProductTypeDto> results = productTypeService.deleteAll();
+        return ResponseEntity.ok().body(results != null ? results : new Object());
+    }
 }

@@ -31,13 +31,13 @@ public class ProductType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "typeId")
-    private int id;
+    private Integer id;
 
     @Column(name = "typeName", unique = true)
     private String name;
 
     // Một loại thuốc có nhiều nhóm thuốc
-    @OneToMany(mappedBy = "productType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productType", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<ProductGroup> productGroups;
