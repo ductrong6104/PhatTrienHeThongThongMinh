@@ -2,6 +2,9 @@ package com.schoolproject.Drugstore.product.rate;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.customer.Customer;
 import com.schoolproject.Drugstore.product.product.Product;
 
@@ -27,12 +30,17 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//@JsonIdentityInfo is used when objects have parent child relationship.
+// @JsonIdentityInfo is used to indicate that object identity will be used during serialization/de-serialization.
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductRate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rateId")
-    private int id;
+    private Integer id;
 
     @Column(name = "star")
     private int star;

@@ -29,7 +29,7 @@ public class ProductSpecifyFor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "specifyId")
-    private int id;
+    private Integer id;
 
     @Column(name = "specifyName")
     private String name;

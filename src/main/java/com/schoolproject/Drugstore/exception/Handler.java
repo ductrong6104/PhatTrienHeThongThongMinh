@@ -8,7 +8,6 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.schoolproject.Drugstore.exception.customeException.CannotCreateDataException;
 import com.schoolproject.Drugstore.exception.customeException.CannotDeleteDataException;
-import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
 
 @RestControllerAdvice
 public class Handler {

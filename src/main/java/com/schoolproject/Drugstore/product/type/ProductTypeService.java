@@ -1,78 +1,60 @@
 package com.schoolproject.Drugstore.product.type;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
+import com.schoolproject.Drugstore.exception.DataNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.schoolproject.Drugstore.exception.customeException.CannotCreateDataException;
-import com.schoolproject.Drugstore.exception.customeException.CannotDeleteDataException;
-import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class ProductTypeService {
-
     private final ProductTypeRepository productTypeRepository;
-
-    public Collection<ProductTypeDto> getAll() {
-        List<ProductTypeDto> list = productTypeRepository.findAll().stream()
-                .map(type -> new ProductTypeDto(type.getId(), type.getName()))
-                .collect(Collectors.toList());
-        return list;
+    @Autowired
+    public ProductTypeService(ProductTypeRepository productTypeRepository) {
+        this.productTypeRepository = productTypeRepository;
     }
 
-    public ProductTypeDto getById(int id) {
-        ProductType productType = productTypeRepository.findById(id).orElseThrow(() -> new DataNotFoundException());
-        return new ProductTypeDto(productType.getId(), productType.getName());
-    }
-
-    public ProductTypeDto create(ProductTypeDto productTypeDto) {
-
-        try {
-            new ProductType();
-            ProductType productType = productTypeRepository
-                    .save(ProductType.builder().id(0).name(productTypeDto.getName()).build());
-
-            return new ProductTypeDto(productType.getId(), productType.getName());
-        } catch (Exception e) {
-            throw new CannotCreateDataException();
+    public Collection<ProductType> getAllProductTypes(){
+        List<ProductType> productTypes = productTypeRepository.findAll();
+        for (ProductType b: productTypes){
+            System.out.println(b);
         }
+        return productTypes;
     }
 
-    public ProductTypeDto edit(Integer id, ProductTypeDto productTypeDto) {
-        ProductType productType = productTypeRepository.findById(id).map((type) -> {
-            type.setName(productTypeDto.getName());
-            return productTypeRepository.save(type);
-        }).orElseThrow(() -> new DataNotFoundException());
+    public ProductType getProductTypeById(Integer id){
+        Optional<ProductType> productType =  productTypeRepository.findById(id);
+        if (productType.isEmpty()){
+            throw new DataNotFoundException(id, ProductType.class.getSimpleName());
 
-        return ProductTypeDto.builder().id(productType.getId()).name(productType.getName()).build();
-    }
-
-    public ProductTypeDto delete(Integer id) {
-        ProductType productType = productTypeRepository.findById(id).orElseThrow(() -> new DataNotFoundException());
-
-        try {
-            productTypeRepository.delete(productType);
-        } catch (Exception ex) {
-            throw new CannotDeleteDataException();
         }
-
-        return ProductTypeDto.builder().id(productType.getId()).name(productType.getName()).build();
+        return productTypeRepository.getReferenceById(id);
     }
 
-    public Collection<ProductTypeDto> deleteAll() throws Exception {
-        Collection<ProductTypeDto> list = getAll();
+    public ProductType updateProductType(ProductType newProductType, Integer id){
+        // parameter trong map se la object ma repository tim duoc
 
-        try {
-            productTypeRepository.deleteAll();
-        } catch (Exception ex) {
-            throw new CannotDeleteDataException();
-        }
-        return list;
+        ProductType updateProductType = productTypeRepository.findById(id).map(productType ->
+                {
+                    
+                    return productTypeRepository.save(productType);
+                }).orElseGet(()->{
+            newProductType.setId(id);
+            return productTypeRepository.save(newProductType);
+        });
+
+        return updateProductType;
     }
+    public ProductType addProductType(ProductType productType){
+        return productTypeRepository.save(productType);
+    }
+
+    public void deleteProductType(Integer id){
+        productTypeRepository.deleteById(id);
+    }
+
 
 }

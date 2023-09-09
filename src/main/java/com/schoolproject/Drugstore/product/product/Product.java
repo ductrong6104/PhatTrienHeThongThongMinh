@@ -2,6 +2,9 @@ package com.schoolproject.Drugstore.product.product;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.order.order.Order;
 import com.schoolproject.Drugstore.product.brand.Brand;
 import com.schoolproject.Drugstore.product.category.ProductCategory;
@@ -27,23 +30,22 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Table(name = "Product")
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "productId")
-    private int id;
+    private Integer id;
 
     @Column(name = "productName")
     private String name;
@@ -51,69 +53,85 @@ public class Product {
     @Column(name = "description")
     private String description;
 
+    // cach dung
     @Column(name = "uses")
     private String uses;
 
+    // huong dan su dung
     @Column(name = "userManual")
     private String userManual;
 
+    // tac dung phu
     @Column(name = "sideEffects")
     private String sideEffects;
 
+    // bao quan
     @Column(name = "storage")
     private String storage;
 
+    // luu y
     @Column(name = "note")
     private String note;
 
+    // tong so luong
     @Column(name = "totalNumber")
     private int totalNumber;
 
+    // so luong da ban
     @Column(name = "soldNumber")
     private int soldNumber;
 
+
+    // loai san pham
     @ManyToOne
     @JoinColumn(name = "categoryId")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private ProductCategory productCategory;
 
+    // thuong hieu
     @ManyToOne
     @JoinColumn(name = "brandId")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Brand brand;
 
+    // dang bao che
     @ManyToOne
     @JoinColumn(name = "dosageFormId")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private ProductDosageForm productDosageForm;
 
+    // doi tuong chi dinh
     @ManyToMany
     @JoinTable(name = "ProductSpecifyDetail", joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "specifyId"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<ProductSpecifyFor> productSpecifyFors;
 
+    // doi tuong su dung
     @ManyToMany
     @JoinTable(name = "ProductUseDetail", joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "useForId"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<ProductUseFor> productUseFors;
 
+    // don vi tinh
     @ManyToMany
     @JoinTable(name = "ProductUnitDetail", joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "productUnitId"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<ProductUnit> productUnits;
 
+    // thanh phan san pham
     @ManyToMany
     @JoinTable(name = "ProductIngredientDetail", joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "ingredientId"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<ProductIngredient> productIngredients;
 
+    // chi tiet dat hang
     @ManyToMany
     @JoinTable(name = "OrderDetail", joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "orderId"))
     @EqualsAndHashCode.Exclude
@@ -135,4 +153,25 @@ public class Product {
     @ToString.Exclude
     private Collection<ProductComment> productComments;
 
+    // constructor to add new product
+
+    public Product(String name, String description, String uses, String userManual, String sideEffects, String storage, String note, int totalNumber, int soldNumber, ProductCategory productCategory, Brand brand, ProductDosageForm productDosageForm, Collection<ProductSpecifyFor> productSpecifyFors, Collection<ProductUseFor> productUseFors, Collection<ProductUnit> productUnits, Collection<ProductIngredient> productIngredients, Collection<ProductImage> productImages) {
+        this.name = name;
+        this.description = description;
+        this.uses = uses;
+        this.userManual = userManual;
+        this.sideEffects = sideEffects;
+        this.storage = storage;
+        this.note = note;
+        this.totalNumber = totalNumber;
+        this.soldNumber = soldNumber;
+        this.productCategory = productCategory;
+        this.brand = brand;
+        this.productDosageForm = productDosageForm;
+        this.productSpecifyFors = productSpecifyFors;
+        this.productUseFors = productUseFors;
+        this.productUnits = productUnits;
+        this.productIngredients = productIngredients;
+        this.productImages = productImages;
+    }
 }

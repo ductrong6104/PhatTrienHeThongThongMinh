@@ -27,7 +27,7 @@ public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "imageId")
-    private int id;
+    private Integer id;
 
     @Column(name = "imageName")
     private String name;
