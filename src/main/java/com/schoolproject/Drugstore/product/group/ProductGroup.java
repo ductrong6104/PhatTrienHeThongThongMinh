@@ -32,7 +32,7 @@ public class ProductGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "groupId")
-    private int id;
+    private Integer id;
 
     @Column(name = "groupName", unique = true)
     private String name;

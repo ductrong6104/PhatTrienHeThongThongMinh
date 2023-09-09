@@ -1,5 +1,8 @@
 package com.schoolproject.Drugstore.product.comment;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.customer.Customer;
 import com.schoolproject.Drugstore.product.product.Product;
 
@@ -25,12 +28,15 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commentId")
-    private int id;
+    private Integer id;
 
     @Column(name = "[content]")
     private int content;

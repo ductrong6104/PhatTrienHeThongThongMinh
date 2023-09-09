@@ -2,6 +2,10 @@ package com.schoolproject.Drugstore.product.brand;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.nation.Nation;
 import com.schoolproject.Drugstore.product.product.Product;
 
@@ -16,17 +20,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Table(name = "Brand")
 @Entity
+@Data
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brandId")
-    private int id;
+    private Integer id;
 
     @Column(name = "brandName", unique = true)
     private String name;
@@ -39,6 +48,8 @@ public class Brand {
 
     @ManyToOne
     @JoinColumn(name = "nationId")
+    // JsonBackReference: phan sau cua reference, object Brand khong the tham chieu den object nation
+    // muc dich them: de tranh get json infinite loop
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Nation nation;

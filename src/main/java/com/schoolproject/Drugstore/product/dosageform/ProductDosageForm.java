@@ -29,7 +29,7 @@ public class ProductDosageForm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dosageFormId")
-    private int id;
+    private Integer id;
 
     @Column(name = "dosageFormName")
     private String name;

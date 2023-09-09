@@ -2,6 +2,10 @@ package com.schoolproject.Drugstore.order.order;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.customer.Customer;
 import com.schoolproject.Drugstore.order.status.OrderStatus;
 import com.schoolproject.Drugstore.payment.Payment;
@@ -28,12 +32,15 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderId")
-    private int id;
+    private Integer id;
 
     @Column(name = "recipientName")
     private String recipientName;
