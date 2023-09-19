@@ -3,6 +3,8 @@ package com.schoolproject.Drugstore.product.category;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.product.category.ProductCategory;
 import com.schoolproject.Drugstore.product.group.ProductGroup;
 import com.schoolproject.Drugstore.product.product.Product;
@@ -29,12 +31,15 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "categoryId")
-    private int id;
+    private Integer id;
 
     @Column(name = "categoryName", unique = true)
     private String name;
@@ -52,4 +57,9 @@ public class ProductCategory {
     @ToString.Exclude
     private Collection<Product> products;
 
+    public ProductCategory(String name, ProductGroup productGroup, Collection<Product> products) {
+        this.name = name;
+        this.productGroup = productGroup;
+        this.products = products;
+    }
 }

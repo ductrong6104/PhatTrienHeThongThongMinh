@@ -17,39 +17,41 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class ProductGroupController {
+public class
+ProductGroupController {
     private final ProductGroupService productGroupService;
     private final ProductGroupModelAssembler productGroupModelAssembler;
+    private final ProductGroupMapperDto productGroupMapperDto;
 
 
     @Autowired
-    public ProductGroupController(ProductGroupService productGroupService, ProductGroupModelAssembler productGroupModelAssembler) {
+    public ProductGroupController(ProductGroupService productGroupService, ProductGroupModelAssembler productGroupModelAssembler, ProductGroupMapperDto productGroupMapperDto) {
         this.productGroupService = productGroupService;
         this.productGroupModelAssembler = productGroupModelAssembler;
+        this.productGroupMapperDto = productGroupMapperDto;
     }
 
     @GetMapping("/productGroups/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        ProductGroup productGroup = productGroupService.getProductGroupById(id);
-        return productGroupModelAssembler.toModel(productGroup);
+        ProductGroupDto productGroupDto = productGroupService.getProductById(id);
+        return productGroupModelAssembler.toModel(productGroupDto);
     }
     @GetMapping("/productGroups")
-    CollectionModel<EntityModel<ProductGroup>> all(){
-        List<EntityModel<ProductGroup>> productGroups = productGroupService.getAllProductGroups().stream().map(productGroupModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<ProductGroupDto>> all(){
+        List<EntityModel<ProductGroupDto>> productGroups = productGroupService.getAllProducts().stream().map(productGroupModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productGroups, linkTo(methodOn(ProductGroupController.class).all()).withSelfRel());
     }
 
     @PostMapping("/productGroups")
-    ResponseEntity<?> newProductGroup(@RequestBody ProductGroup productGroup){
-        EntityModel<ProductGroup> productGroupEntityModel = productGroupModelAssembler.toModel(productGroupService.addProductGroup(productGroup));
-
+    ResponseEntity<?> newProductGroup(@RequestBody ProductGroupCreationDto productGroupCreationDto){
+        EntityModel<ProductGroupDto> productGroupEntityModel = productGroupModelAssembler.toModel(productGroupService.addProductGroup(productGroupCreationDto));
         return ResponseEntity.created(productGroupEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productGroupEntityModel);
     }
 
     @PutMapping("productGroups/{id}")
-    ResponseEntity<?> replaceProductGroup(@RequestBody ProductGroup productGroup, @PathVariable Integer id){
-        ProductGroup updateProductGroup = productGroupService.updateProductGroup(productGroup, id);
-        EntityModel<ProductGroup> productGroupEntityModel = productGroupModelAssembler.toModel(updateProductGroup);
+    ResponseEntity<?> replaceProductGroup(@RequestBody ProductGroupCreationDto productGroupCreationDto, @PathVariable Integer id){
+        ProductGroupDto updateProductGroup = productGroupService.updateProductGroup(productGroupCreationDto, id);
+        EntityModel<ProductGroupDto> productGroupEntityModel = productGroupModelAssembler.toModel(updateProductGroup);
         return ResponseEntity.created(productGroupEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productGroupEntityModel);
     }
 

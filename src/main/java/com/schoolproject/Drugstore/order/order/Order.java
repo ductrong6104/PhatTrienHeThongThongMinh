@@ -78,4 +78,14 @@ public class Order {
     @ToString.Exclude
     private Collection<Product> products;
 
+    public Order(String recipientName, String recipientPhoneNumber, String recipientAddress, Boolean buyOnline, OrderStatus orderStatus, Payment payment, Customer customer, Collection<Product> products) {
+        this.recipientName = recipientName;
+        this.recipientPhoneNumber = recipientPhoneNumber;
+        this.recipientAddress = recipientAddress;
+        this.buyOnline = buyOnline;
+        this.orderStatus = orderStatus;
+        this.payment = payment;
+        this.customer = customer;
+        this.products = products;
+    }
 }

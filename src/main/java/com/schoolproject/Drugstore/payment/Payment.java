@@ -48,4 +48,9 @@ public class Payment {
     @ToString.Exclude
     private Collection<Order> orders;
 
+    public Payment(String name, String description, Collection<Order> orders) {
+        this.name = name;
+        this.description = description;
+        this.orders = orders;
+    }
 }

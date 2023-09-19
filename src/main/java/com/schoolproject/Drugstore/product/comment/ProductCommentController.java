@@ -1,7 +1,6 @@
 package com.schoolproject.Drugstore.product.comment;
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -17,43 +16,46 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class ProductCommentController {
+public class
+ProductCommentController {
     private final ProductCommentService productCommentService;
     private final ProductCommentModelAssembler productCommentModelAssembler;
+    private final ProductCommentMapperDto productCommentMapperDto;
 
 
     @Autowired
-    public ProductCommentController(ProductCommentService productCommentService, ProductCommentModelAssembler productCommentModelAssembler) {
+    public ProductCommentController(ProductCommentService productCommentService, ProductCommentModelAssembler productCommentModelAssembler, ProductCommentMapperDto productCommentMapperDto) {
         this.productCommentService = productCommentService;
         this.productCommentModelAssembler = productCommentModelAssembler;
+        this.productCommentMapperDto = productCommentMapperDto;
     }
 
     @GetMapping("/productComments/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        ProductComment productComment = productCommentService.getProductCommentById(id);
-        return productCommentModelAssembler.toModel(productComment);
+        ProductCommentDto productCommentDto = productCommentService.getProductCommentById(id);
+        return productCommentModelAssembler.toModel(productCommentDto);
     }
     @GetMapping("/productComments")
-    CollectionModel<EntityModel<ProductComment>> all(){
-        List<EntityModel<ProductComment>> productComments = productCommentService.getAllProductComments().stream().map(productCommentModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<ProductCommentDto>> all(){
+        List<EntityModel<ProductCommentDto>> productComments = productCommentService.getAllProductComments().stream().map(productCommentModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productComments, linkTo(methodOn(ProductCommentController.class).all()).withSelfRel());
     }
 
     @PostMapping("/productComments")
-    ResponseEntity<?> newProductComment(@RequestBody ProductComment productComment){
-        EntityModel<ProductComment> productCommentEntityModel = productCommentModelAssembler.toModel(productCommentService.addProductComment(productComment));
+    ResponseEntity<?> newProductComment(@RequestBody ProductCommentCreationDto productCommentCreationDto){
+        EntityModel<ProductCommentDto> productCommentEntityModel = productCommentModelAssembler.toModel(productCommentService.addProductComment(productCommentCreationDto));
         return ResponseEntity.created(productCommentEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productCommentEntityModel);
     }
 
     @PutMapping("productComments/{id}")
-    ResponseEntity<?> replaceProductComment(@RequestBody ProductComment productComment, @PathVariable Integer id){
-        ProductComment updateProductComment = productCommentService.updateProductComment(productComment, id);
-        EntityModel<ProductComment> productCommentEntityModel = productCommentModelAssembler.toModel(updateProductComment);
+    ResponseEntity<?> replaceProductComment(@RequestBody ProductCommentCreationDto productCommentCreationDto, @PathVariable Integer id){
+        ProductCommentDto updateProduct = productCommentService.updateProductComment(productCommentCreationDto, id);
+        EntityModel<ProductCommentDto> productCommentEntityModel = productCommentModelAssembler.toModel(updateProduct);
         return ResponseEntity.created(productCommentEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productCommentEntityModel);
     }
 
     @DeleteMapping("productComments/{id}")
-    ResponseEntity<?> deleteProductComment(@PathVariable Integer id){
+    ResponseEntity<?> deleteProduct(@PathVariable Integer id){
         productCommentService.deleteProductComment(id);
         return ResponseEntity.noContent().build();
     }

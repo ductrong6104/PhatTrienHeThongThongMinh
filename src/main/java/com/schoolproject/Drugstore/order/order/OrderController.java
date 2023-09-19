@@ -16,43 +16,46 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class OrderController {
+public class
+OrderController {
     private final OrderService orderService;
     private final OrderModelAssembler orderModelAssembler;
+    private final OrderMapperDto orderMapperDto;
 
 
     @Autowired
-    public OrderController(OrderService orderService, OrderModelAssembler orderModelAssembler) {
+    public OrderController(OrderService orderService, OrderModelAssembler orderModelAssembler, OrderMapperDto orderMapperDto) {
         this.orderService = orderService;
         this.orderModelAssembler = orderModelAssembler;
+        this.orderMapperDto = orderMapperDto;
     }
 
     @GetMapping("/orders/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        Order order = orderService.getOrderById(id);
-        return orderModelAssembler.toModel(order);
+        OrderDto orderDto = orderService.getOrderById(id);
+        return orderModelAssembler.toModel(orderDto);
     }
     @GetMapping("/orders")
-    CollectionModel<EntityModel<Order>> all(){
-        List<EntityModel<Order>> orders = orderService.getAllOrders().stream().map(orderModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<OrderDto>> all(){
+        List<EntityModel<OrderDto>> orders = orderService.getAllOrders().stream().map(orderModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(orders, linkTo(methodOn(OrderController.class).all()).withSelfRel());
     }
 
     @PostMapping("/orders")
-    ResponseEntity<?> newOrder(@RequestBody Order order){
-        EntityModel<Order> orderEntityModel = orderModelAssembler.toModel(orderService.addOrder(order));
+    ResponseEntity<?> newOrder(@RequestBody OrderCreationDto orderCreationDto){
+        EntityModel<OrderDto> orderEntityModel = orderModelAssembler.toModel(orderService.addOrder(orderCreationDto));
         return ResponseEntity.created(orderEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(orderEntityModel);
     }
 
     @PutMapping("orders/{id}")
-    ResponseEntity<?> replaceOrder(@RequestBody Order order, @PathVariable Integer id){
-        Order updateOrder = orderService.updateOrder(order, id);
-        EntityModel<Order> orderEntityModel = orderModelAssembler.toModel(updateOrder);
+    ResponseEntity<?> replaceOrder(@RequestBody OrderCreationDto orderCreationDto, @PathVariable Integer id){
+        OrderDto updateProduct = orderService.updateOrder(orderCreationDto, id);
+        EntityModel<OrderDto> orderEntityModel = orderModelAssembler.toModel(updateProduct);
         return ResponseEntity.created(orderEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(orderEntityModel);
     }
 
     @DeleteMapping("orders/{id}")
-    ResponseEntity<?> deleteOrder(@PathVariable Integer id){
+    ResponseEntity<?> deleteProduct(@PathVariable Integer id){
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }

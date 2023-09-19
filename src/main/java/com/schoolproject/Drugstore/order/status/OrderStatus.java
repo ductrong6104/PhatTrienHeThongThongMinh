@@ -45,4 +45,8 @@ public class OrderStatus {
     @ToString.Exclude
     private Collection<Order> orders;
 
+    public OrderStatus(String name, Collection<Order> orders) {
+        this.name = name;
+        this.orders = orders;
+    }
 }

@@ -1,7 +1,6 @@
 package com.schoolproject.Drugstore.product.ingredient;
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -17,44 +16,46 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class ProductIngredientController {
+public class
+ProductIngredientController {
     private final ProductIngredientService productIngredientService;
     private final ProductIngredientModelAssembler productIngredientModelAssembler;
+    private final ProductIngredientMapperDto productIngredientMapperDto;
 
 
     @Autowired
-    public ProductIngredientController(ProductIngredientService productIngredientService, ProductIngredientModelAssembler productIngredientModelAssembler) {
+    public ProductIngredientController(ProductIngredientService productIngredientService, ProductIngredientModelAssembler productIngredientModelAssembler, ProductIngredientMapperDto productIngredientMapperDto) {
         this.productIngredientService = productIngredientService;
         this.productIngredientModelAssembler = productIngredientModelAssembler;
+        this.productIngredientMapperDto = productIngredientMapperDto;
     }
 
     @GetMapping("/productIngredients/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        ProductIngredient productIngredient = productIngredientService.getProductIngredientById(id);
-        return productIngredientModelAssembler.toModel(productIngredient);
+        ProductIngredientDto productIngredientDto = productIngredientService.getProductIngredientById(id);
+        return productIngredientModelAssembler.toModel(productIngredientDto);
     }
     @GetMapping("/productIngredients")
-    CollectionModel<EntityModel<ProductIngredient>> all(){
-        List<EntityModel<ProductIngredient>> productIngredients = productIngredientService.getAllProductIngredients().stream().map(productIngredientModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<ProductIngredientDto>> all(){
+        List<EntityModel<ProductIngredientDto>> productIngredients = productIngredientService.getAllProductIngredients().stream().map(productIngredientModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productIngredients, linkTo(methodOn(ProductIngredientController.class).all()).withSelfRel());
     }
 
     @PostMapping("/productIngredients")
-    ResponseEntity<?> newProductIngredient(@RequestBody ProductIngredient productIngredient){
-        EntityModel<ProductIngredient> productIngredientEntityModel = productIngredientModelAssembler.toModel(productIngredientService.addProductIngredient(productIngredient));
-
+    ResponseEntity<?> newProductIngredient(@RequestBody ProductIngredientCreationDto productIngredientCreationDto){
+        EntityModel<ProductIngredientDto> productIngredientEntityModel = productIngredientModelAssembler.toModel(productIngredientService.addProductIngredient(productIngredientCreationDto));
         return ResponseEntity.created(productIngredientEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productIngredientEntityModel);
     }
 
     @PutMapping("productIngredients/{id}")
-    ResponseEntity<?> replaceProductIngredient(@RequestBody ProductIngredient productIngredient, @PathVariable Integer id){
-        ProductIngredient updateProductIngredient = productIngredientService.updateProductIngredient(productIngredient, id);
-        EntityModel<ProductIngredient> productIngredientEntityModel = productIngredientModelAssembler.toModel(updateProductIngredient);
+    ResponseEntity<?> replaceProductIngredient(@RequestBody ProductIngredientCreationDto productIngredientCreationDto, @PathVariable Integer id){
+        ProductIngredientDto updateProduct = productIngredientService.updateProductIngredient(productIngredientCreationDto, id);
+        EntityModel<ProductIngredientDto> productIngredientEntityModel = productIngredientModelAssembler.toModel(updateProduct);
         return ResponseEntity.created(productIngredientEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productIngredientEntityModel);
     }
 
     @DeleteMapping("productIngredients/{id}")
-    ResponseEntity<?> deleteProductIngredient(@PathVariable Integer id){
+    ResponseEntity<?> deleteProduct(@PathVariable Integer id){
         productIngredientService.deleteProductIngredient(id);
         return ResponseEntity.noContent().build();
     }

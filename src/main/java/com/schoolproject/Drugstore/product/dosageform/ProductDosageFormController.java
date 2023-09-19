@@ -17,39 +17,41 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class ProductDosageFormController {
+public class
+ProductDosageFormController {
     private final ProductDosageFormService productDosageFormService;
     private final ProductDosageFormModelAssembler productDosageFormModelAssembler;
+    private final ProductDosageFormMapperDto productDosageFormMapperDto;
 
 
     @Autowired
-    public ProductDosageFormController(ProductDosageFormService productDosageFormService, ProductDosageFormModelAssembler productDosageFormModelAssembler) {
+    public ProductDosageFormController(ProductDosageFormService productDosageFormService, ProductDosageFormModelAssembler productDosageFormModelAssembler, ProductDosageFormMapperDto productDosageFormMapperDto) {
         this.productDosageFormService = productDosageFormService;
         this.productDosageFormModelAssembler = productDosageFormModelAssembler;
+        this.productDosageFormMapperDto = productDosageFormMapperDto;
     }
 
     @GetMapping("/productDosageForms/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        ProductDosageForm productDosageForm = productDosageFormService.getProductDosageFormById(id);
-        return productDosageFormModelAssembler.toModel(productDosageForm);
+        ProductDosageFormDto productDosageFormDto = productDosageFormService.getProductById(id);
+        return productDosageFormModelAssembler.toModel(productDosageFormDto);
     }
     @GetMapping("/productDosageForms")
-    CollectionModel<EntityModel<ProductDosageForm>> all(){
-        List<EntityModel<ProductDosageForm>> productDosageForms = productDosageFormService.getAllProductDosageForms().stream().map(productDosageFormModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<ProductDosageFormDto>> all(){
+        List<EntityModel<ProductDosageFormDto>> productDosageForms = productDosageFormService.getAllProducts().stream().map(productDosageFormModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productDosageForms, linkTo(methodOn(ProductDosageFormController.class).all()).withSelfRel());
     }
 
     @PostMapping("/productDosageForms")
-    ResponseEntity<?> newProductDosageForm(@RequestBody ProductDosageForm productDosageForm){
-        EntityModel<ProductDosageForm> productDosageFormEntityModel = productDosageFormModelAssembler.toModel(productDosageFormService.addProductDosageForm(productDosageForm));
-
+    ResponseEntity<?> newProductDosageForm(@RequestBody ProductDosageFormCreationDto productDosageFormCreationDto){
+        EntityModel<ProductDosageFormDto> productDosageFormEntityModel = productDosageFormModelAssembler.toModel(productDosageFormService.addProductDosageForm(productDosageFormCreationDto));
         return ResponseEntity.created(productDosageFormEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productDosageFormEntityModel);
     }
 
     @PutMapping("productDosageForms/{id}")
-    ResponseEntity<?> replaceProductDosageForm(@RequestBody ProductDosageForm productDosageForm, @PathVariable Integer id){
-        ProductDosageForm updateProductDosageForm = productDosageFormService.updateProductDosageForm(productDosageForm, id);
-        EntityModel<ProductDosageForm> productDosageFormEntityModel = productDosageFormModelAssembler.toModel(updateProductDosageForm);
+    ResponseEntity<?> replaceProductDosageForm(@RequestBody ProductDosageFormCreationDto productDosageFormCreationDto, @PathVariable Integer id){
+        ProductDosageFormDto updateProductDosageForm = productDosageFormService.updateProductDosageForm(productDosageFormCreationDto, id);
+        EntityModel<ProductDosageFormDto> productDosageFormEntityModel = productDosageFormModelAssembler.toModel(updateProductDosageForm);
         return ResponseEntity.created(productDosageFormEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productDosageFormEntityModel);
     }
 

@@ -48,4 +48,8 @@ public class Nation {
     @ToString.Exclude
     private Collection<Brand> brands;
 
+    public Nation(String name, Collection<Brand> brands) {
+        this.name = name;
+        this.brands = brands;
+    }
 }

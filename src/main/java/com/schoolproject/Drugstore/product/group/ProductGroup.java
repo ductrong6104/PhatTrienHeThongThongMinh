@@ -2,6 +2,8 @@ package com.schoolproject.Drugstore.product.group;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.product.category.ProductCategory;
 import com.schoolproject.Drugstore.product.type.ProductType;
 
@@ -27,6 +29,9 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductGroup {
 
     @Id
@@ -50,4 +55,9 @@ public class ProductGroup {
     @ToString.Exclude
     private Collection<ProductCategory> productCategories;
 
+    public ProductGroup(String name, ProductType productType, Collection<ProductCategory> productCategories) {
+        this.name = name;
+        this.productType = productType;
+        this.productCategories = productCategories;
+    }
 }

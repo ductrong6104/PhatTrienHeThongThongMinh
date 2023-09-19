@@ -43,7 +43,7 @@ public class ProductRate {
     private Integer id;
 
     @Column(name = "star")
-    private int star;
+    private Integer star;
 
     @Column(name = "time")
     private Date time;
@@ -60,4 +60,10 @@ public class ProductRate {
     @ToString.Exclude
     private Customer customer;
 
+    public ProductRate(Integer star, Date time, Product product, Customer customer) {
+        this.star = star;
+        this.time = time;
+        this.product = product;
+        this.customer = customer;
+    }
 }

@@ -1,7 +1,6 @@
 package com.schoolproject.Drugstore.order.status;
 
 
-import com.schoolproject.Drugstore.order.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -17,44 +16,47 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class OrderStatusController {
-    private final OrderStatusService orderService;
-    private final OrderStatusModelAssembler orderModelAssembler;
+public class
+OrderStatusController {
+    private final OrderStatusService orderStatusService;
+    private final OrderStatusModelAssembler orderStatusModelAssembler;
+    private final OrderStatusMapperDto orderStatusMapperDto;
 
 
     @Autowired
-    public OrderStatusController(OrderStatusService orderService, OrderStatusModelAssembler orderModelAssembler) {
-        this.orderService = orderService;
-        this.orderModelAssembler = orderModelAssembler;
+    public OrderStatusController(OrderStatusService orderStatusService, OrderStatusModelAssembler orderStatusModelAssembler, OrderStatusMapperDto orderStatusMapperDto) {
+        this.orderStatusService = orderStatusService;
+        this.orderStatusModelAssembler = orderStatusModelAssembler;
+        this.orderStatusMapperDto = orderStatusMapperDto;
     }
 
-    @GetMapping("/orderStatus/{id}")
+    @GetMapping("/orderStatuss/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        OrderStatus orderStatus = orderService.getOrderStatusById(id);
-        return orderModelAssembler.toModel(orderStatus);
+        OrderStatusDto orderStatusDto = orderStatusService.getOrderStatusById(id);
+        return orderStatusModelAssembler.toModel(orderStatusDto);
     }
-    @GetMapping("/orderStatus")
-    CollectionModel<EntityModel<OrderStatus>> all(){
-        List<EntityModel<OrderStatus>> orders = orderService.getAllOrderStatus().stream().map(orderModelAssembler::toModel).collect(Collectors.toList());
-        return CollectionModel.of(orders, linkTo(methodOn(OrderStatusController.class).all()).withSelfRel());
-    }
-
-    @PostMapping("/orderStatus")
-    ResponseEntity<?> newOrder(@RequestBody OrderStatus order){
-        EntityModel<OrderStatus> orderEntityModel = orderModelAssembler.toModel(orderService.addOrderStatus(order));
-        return ResponseEntity.created(orderEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(orderEntityModel);
+    @GetMapping("/orderStatuss")
+    CollectionModel<EntityModel<OrderStatusDto>> all(){
+        List<EntityModel<OrderStatusDto>> orderStatuss = orderStatusService.getAllOrderStatuss().stream().map(orderStatusModelAssembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(orderStatuss, linkTo(methodOn(OrderStatusController.class).all()).withSelfRel());
     }
 
-    @PutMapping("/orderStatus/{id}")
-    ResponseEntity<?> replaceOrderStatus(@RequestBody OrderStatus orderStatus, @PathVariable Integer id){
-        OrderStatus updateOrderStatus = orderService.updateOrderStatus(orderStatus, id);
-        EntityModel<OrderStatus> orderEntityModel = orderModelAssembler.toModel(updateOrderStatus);
-        return ResponseEntity.created(orderEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(orderEntityModel);
+    @PostMapping("/orderStatuss")
+    ResponseEntity<?> newOrderStatus(@RequestBody OrderStatusCreationDto orderStatusCreationDto){
+        EntityModel<OrderStatusDto> orderStatusEntityModel = orderStatusModelAssembler.toModel(orderStatusService.addOrderStatus(orderStatusCreationDto));
+        return ResponseEntity.created(orderStatusEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(orderStatusEntityModel);
     }
 
-    @DeleteMapping("/orderStatus/{id}")
-    ResponseEntity<?> deleteOrderStatus(@PathVariable Integer id){
-        orderService.deleteOrderStatus(id);
+    @PutMapping("orderStatuss/{id}")
+    ResponseEntity<?> replaceOrderStatus(@RequestBody OrderStatusCreationDto orderStatusCreationDto, @PathVariable Integer id){
+        OrderStatusDto updateProduct = orderStatusService.updateOrderStatus(orderStatusCreationDto, id);
+        EntityModel<OrderStatusDto> orderStatusEntityModel = orderStatusModelAssembler.toModel(updateProduct);
+        return ResponseEntity.created(orderStatusEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(orderStatusEntityModel);
+    }
+
+    @DeleteMapping("orderStatuss/{id}")
+    ResponseEntity<?> deleteProduct(@PathVariable Integer id){
+        orderStatusService.deleteOrderStatus(id);
         return ResponseEntity.noContent().build();
     }
 }
