@@ -2,7 +2,6 @@ package com.schoolproject.Drugstore.product.category;
 
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -18,38 +17,41 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class ProductCategoryController {
+public class
+ProductCategoryController {
     private final ProductCategoryService productCategoryService;
     private final ProductCategoryModelAssembler productCategoryModelAssembler;
+    private final ProductCategoryMapperDto productCategoryMapperDto;
 
 
     @Autowired
-    public ProductCategoryController(ProductCategoryService productCategoryService, ProductCategoryModelAssembler productCategoryModelAssembler) {
+    public ProductCategoryController(ProductCategoryService productCategoryService, ProductCategoryModelAssembler productCategoryModelAssembler, ProductCategoryMapperDto productCategoryMapperDto) {
         this.productCategoryService = productCategoryService;
         this.productCategoryModelAssembler = productCategoryModelAssembler;
+        this.productCategoryMapperDto = productCategoryMapperDto;
     }
 
     @GetMapping("/productCategorys/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        ProductCategory productCategory = productCategoryService.getProductCategoryById(id);
-        return productCategoryModelAssembler.toModel(productCategory);
+        ProductCategoryDto productCategoryDto = productCategoryService.getProductById(id);
+        return productCategoryModelAssembler.toModel(productCategoryDto);
     }
     @GetMapping("/productCategorys")
-    CollectionModel<EntityModel<ProductCategory>> all(){
-        List<EntityModel<ProductCategory>> productCategorys = productCategoryService.getAllProductCategorys().stream().map(productCategoryModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<ProductCategoryDto>> all(){
+        List<EntityModel<ProductCategoryDto>> productCategorys = productCategoryService.getAllProducts().stream().map(productCategoryModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productCategorys, linkTo(methodOn(ProductCategoryController.class).all()).withSelfRel());
     }
 
     @PostMapping("/productCategorys")
-    ResponseEntity<?> newProductCategory(@RequestBody ProductCategory productCategory){
-        EntityModel<ProductCategory> productCategoryEntityModel = productCategoryModelAssembler.toModel(productCategoryService.addProductCategory(productCategory));
+    ResponseEntity<?> newProductCategory(@RequestBody ProductCategoryCreationDto productCategoryCreationDto){
+        EntityModel<ProductCategoryDto> productCategoryEntityModel = productCategoryModelAssembler.toModel(productCategoryService.addProductCategory(productCategoryCreationDto));
         return ResponseEntity.created(productCategoryEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productCategoryEntityModel);
     }
 
     @PutMapping("productCategorys/{id}")
-    ResponseEntity<?> replaceProductCategory(@RequestBody ProductCategory productCategory, @PathVariable Integer id){
-        ProductCategory updateProductCategory = productCategoryService.updateProductCategory(productCategory, id);
-        EntityModel<ProductCategory> productCategoryEntityModel = productCategoryModelAssembler.toModel(updateProductCategory);
+    ResponseEntity<?> replaceProductCategory(@RequestBody ProductCategoryCreationDto productCategoryCreationDto, @PathVariable Integer id){
+        ProductCategoryDto updateProductCategory = productCategoryService.updateProductCategory(productCategoryCreationDto, id);
+        EntityModel<ProductCategoryDto> productCategoryEntityModel = productCategoryModelAssembler.toModel(updateProductCategory);
         return ResponseEntity.created(productCategoryEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productCategoryEntityModel);
     }
 

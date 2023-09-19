@@ -7,6 +7,7 @@ import com.schoolproject.Drugstore.product.use.ProductUseFor;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 // use for method get, return response kieu productDto cho client thay
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductDto {
     private Integer id;
     private String productName;

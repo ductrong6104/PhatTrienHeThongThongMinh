@@ -17,39 +17,41 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class ProductSpecifyForController {
+public class
+ProductSpecifyForController {
     private final ProductSpecifyForService productSpecifyForService;
     private final ProductSpecifyForModelAssembler productSpecifyForModelAssembler;
+    private final ProductSpecifyForMapperDto productSpecifyForMapperDto;
 
 
     @Autowired
-    public ProductSpecifyForController(ProductSpecifyForService productSpecifyForService, ProductSpecifyForModelAssembler productSpecifyForModelAssembler) {
+    public ProductSpecifyForController(ProductSpecifyForService productSpecifyForService, ProductSpecifyForModelAssembler productSpecifyForModelAssembler, ProductSpecifyForMapperDto productSpecifyForMapperDto) {
         this.productSpecifyForService = productSpecifyForService;
         this.productSpecifyForModelAssembler = productSpecifyForModelAssembler;
+        this.productSpecifyForMapperDto = productSpecifyForMapperDto;
     }
 
     @GetMapping("/productSpecifyFors/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        ProductSpecifyFor productSpecifyFor = productSpecifyForService.getProductSpecifyForById(id);
-        return productSpecifyForModelAssembler.toModel(productSpecifyFor);
+        ProductSpecifyForDto productSpecifyForDto = productSpecifyForService.getProductById(id);
+        return productSpecifyForModelAssembler.toModel(productSpecifyForDto);
     }
     @GetMapping("/productSpecifyFors")
-    CollectionModel<EntityModel<ProductSpecifyFor>> all(){
-        List<EntityModel<ProductSpecifyFor>> productSpecifyFors = productSpecifyForService.getAllProductSpecifyFors().stream().map(productSpecifyForModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<ProductSpecifyForDto>> all(){
+        List<EntityModel<ProductSpecifyForDto>> productSpecifyFors = productSpecifyForService.getAllProducts().stream().map(productSpecifyForModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productSpecifyFors, linkTo(methodOn(ProductSpecifyForController.class).all()).withSelfRel());
     }
 
     @PostMapping("/productSpecifyFors")
-    ResponseEntity<?> newProductSpecifyFor(@RequestBody ProductSpecifyFor productSpecifyFor){
-        EntityModel<ProductSpecifyFor> productSpecifyForEntityModel = productSpecifyForModelAssembler.toModel(productSpecifyForService.addProductSpecifyFor(productSpecifyFor));
-
+    ResponseEntity<?> newProductSpecifyFor(@RequestBody ProductSpecifyForCreationDto productSpecifyForCreationDto){
+        EntityModel<ProductSpecifyForDto> productSpecifyForEntityModel = productSpecifyForModelAssembler.toModel(productSpecifyForService.addProductSpecifyFor(productSpecifyForCreationDto));
         return ResponseEntity.created(productSpecifyForEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productSpecifyForEntityModel);
     }
 
     @PutMapping("productSpecifyFors/{id}")
-    ResponseEntity<?> replaceProductSpecifyFor(@RequestBody ProductSpecifyFor productSpecifyFor, @PathVariable Integer id){
-        ProductSpecifyFor updateProductSpecifyFor = productSpecifyForService.updateProductSpecifyFor(productSpecifyFor, id);
-        EntityModel<ProductSpecifyFor> productSpecifyForEntityModel = productSpecifyForModelAssembler.toModel(updateProductSpecifyFor);
+    ResponseEntity<?> replaceProductSpecifyFor(@RequestBody ProductSpecifyForCreationDto productSpecifyForCreationDto, @PathVariable Integer id){
+        ProductSpecifyForDto updateProductSpecifyFor = productSpecifyForService.updateProductSpecifyFor(productSpecifyForCreationDto, id);
+        EntityModel<ProductSpecifyForDto> productSpecifyForEntityModel = productSpecifyForModelAssembler.toModel(updateProductSpecifyFor);
         return ResponseEntity.created(productSpecifyForEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productSpecifyForEntityModel);
     }
 

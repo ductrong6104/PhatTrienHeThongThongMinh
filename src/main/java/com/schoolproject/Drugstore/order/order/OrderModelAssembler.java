@@ -9,11 +9,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class OrderModelAssembler implements RepresentationModelAssembler<Order, EntityModel<Order>> {
+public class OrderModelAssembler implements RepresentationModelAssembler<OrderDto, EntityModel<OrderDto>> {
     @Override
-    public EntityModel<Order> toModel(Order order){
-        return EntityModel.of(order,
-                linkTo(methodOn(OrderController.class).one(order.getId())).withSelfRel(),
+    public EntityModel<OrderDto> toModel(OrderDto orderDto){
+        return EntityModel.of(orderDto,
+                linkTo(methodOn(OrderController.class).one(orderDto.getId())).withSelfRel(),
                 linkTo(methodOn(OrderController.class).all()).withRel("orders"));
     }
 }

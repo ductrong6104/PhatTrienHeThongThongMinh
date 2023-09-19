@@ -1,6 +1,8 @@
 package com.schoolproject.Drugstore.product.image;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.product.product.Product;
 
 import jakarta.persistence.Column;
@@ -17,11 +19,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// lam sau, y tuong: add source anh vo database
 @Entity
 @Table(name = "ProductImage")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductImage {
 
     @Id

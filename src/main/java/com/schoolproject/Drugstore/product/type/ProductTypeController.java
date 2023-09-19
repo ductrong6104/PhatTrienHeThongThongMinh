@@ -17,39 +17,41 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class ProductTypeController {
+public class
+ProductTypeController {
     private final ProductTypeService productTypeService;
     private final ProductTypeModelAssembler productTypeModelAssembler;
+    private final ProductTypeMapperDto productTypeMapperDto;
 
 
     @Autowired
-    public ProductTypeController(ProductTypeService productTypeService, ProductTypeModelAssembler productTypeModelAssembler) {
+    public ProductTypeController(ProductTypeService productTypeService, ProductTypeModelAssembler productTypeModelAssembler, ProductTypeMapperDto productTypeMapperDto) {
         this.productTypeService = productTypeService;
         this.productTypeModelAssembler = productTypeModelAssembler;
+        this.productTypeMapperDto = productTypeMapperDto;
     }
 
     @GetMapping("/productTypes/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        ProductType productType = productTypeService.getProductTypeById(id);
-        return productTypeModelAssembler.toModel(productType);
+        ProductTypeDto productTypeDto = productTypeService.getProductById(id);
+        return productTypeModelAssembler.toModel(productTypeDto);
     }
     @GetMapping("/productTypes")
-    CollectionModel<EntityModel<ProductType>> all(){
-        List<EntityModel<ProductType>> productTypes = productTypeService.getAllProductTypes().stream().map(productTypeModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<ProductTypeDto>> all(){
+        List<EntityModel<ProductTypeDto>> productTypes = productTypeService.getAllProducts().stream().map(productTypeModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productTypes, linkTo(methodOn(ProductTypeController.class).all()).withSelfRel());
     }
 
     @PostMapping("/productTypes")
-    ResponseEntity<?> newProductType(@RequestBody ProductType productType){
-        EntityModel<ProductType> productTypeEntityModel = productTypeModelAssembler.toModel(productTypeService.addProductType(productType));
-
+    ResponseEntity<?> newProductType(@RequestBody ProductTypeCreationDto productTypeCreationDto){
+        EntityModel<ProductTypeDto> productTypeEntityModel = productTypeModelAssembler.toModel(productTypeService.addProductType(productTypeCreationDto));
         return ResponseEntity.created(productTypeEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productTypeEntityModel);
     }
 
     @PutMapping("productTypes/{id}")
-    ResponseEntity<?> replaceProductType(@RequestBody ProductType productType, @PathVariable Integer id){
-        ProductType updateProductType = productTypeService.updateProductType(productType, id);
-        EntityModel<ProductType> productTypeEntityModel = productTypeModelAssembler.toModel(updateProductType);
+    ResponseEntity<?> replaceProductType(@RequestBody ProductTypeCreationDto productTypeCreationDto, @PathVariable Integer id){
+        ProductTypeDto updateProductType = productTypeService.updateProductType(productTypeCreationDto, id);
+        EntityModel<ProductTypeDto> productTypeEntityModel = productTypeModelAssembler.toModel(updateProductType);
         return ResponseEntity.created(productTypeEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productTypeEntityModel);
     }
 

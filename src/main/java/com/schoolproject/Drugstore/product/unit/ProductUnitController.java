@@ -1,7 +1,7 @@
 package com.schoolproject.Drugstore.product.unit;
 
 
-
+import com.schoolproject.Drugstore.product.unit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -17,44 +17,46 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class ProductUnitController {
+public class
+ProductUnitController {
     private final ProductUnitService productUnitService;
     private final ProductUnitModelAssembler productUnitModelAssembler;
+    private final ProductUnitMapperDto productUnitMapperDto;
 
 
     @Autowired
-    public ProductUnitController(ProductUnitService productUnitService, ProductUnitModelAssembler productUnitModelAssembler) {
+    public ProductUnitController(ProductUnitService productUnitService, ProductUnitModelAssembler productUnitModelAssembler, ProductUnitMapperDto productUnitMapperDto) {
         this.productUnitService = productUnitService;
         this.productUnitModelAssembler = productUnitModelAssembler;
+        this.productUnitMapperDto = productUnitMapperDto;
     }
 
     @GetMapping("/productUnits/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        ProductUnit productUnit = productUnitService.getProductUnitById(id);
-        return productUnitModelAssembler.toModel(productUnit);
+        ProductUnitDto productUnitDto = productUnitService.getProductUnitById(id);
+        return productUnitModelAssembler.toModel(productUnitDto);
     }
     @GetMapping("/productUnits")
-    CollectionModel<EntityModel<ProductUnit>> all(){
-        List<EntityModel<ProductUnit>> productUnits = productUnitService.getAllProductUnits().stream().map(productUnitModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<ProductUnitDto>> all(){
+        List<EntityModel<ProductUnitDto>> productUnits = productUnitService.getAllProductUnits().stream().map(productUnitModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productUnits, linkTo(methodOn(ProductUnitController.class).all()).withSelfRel());
     }
 
     @PostMapping("/productUnits")
-    ResponseEntity<?> newProductUnit(@RequestBody ProductUnit productUnit){
-        EntityModel<ProductUnit> productUnitEntityModel = productUnitModelAssembler.toModel(productUnitService.addProductUnit(productUnit));
-
+    ResponseEntity<?> newProductUnit(@RequestBody ProductUnitCreationDto productUnitCreationDto){
+        EntityModel<ProductUnitDto> productUnitEntityModel = productUnitModelAssembler.toModel(productUnitService.addProductUnit(productUnitCreationDto));
         return ResponseEntity.created(productUnitEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productUnitEntityModel);
     }
 
     @PutMapping("productUnits/{id}")
-    ResponseEntity<?> replaceProductUnit(@RequestBody ProductUnit productUnit, @PathVariable Integer id){
-        ProductUnit updateProductUnit = productUnitService.updateProductUnit(productUnit, id);
-        EntityModel<ProductUnit> productUnitEntityModel = productUnitModelAssembler.toModel(updateProductUnit);
+    ResponseEntity<?> replaceProductUnit(@RequestBody ProductUnitCreationDto productUnitCreationDto, @PathVariable Integer id){
+        ProductUnitDto updateProduct = productUnitService.updateProductUnit(productUnitCreationDto, id);
+        EntityModel<ProductUnitDto> productUnitEntityModel = productUnitModelAssembler.toModel(updateProduct);
         return ResponseEntity.created(productUnitEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productUnitEntityModel);
     }
 
     @DeleteMapping("productUnits/{id}")
-    ResponseEntity<?> deleteProductUnit(@PathVariable Integer id){
+    ResponseEntity<?> deleteProduct(@PathVariable Integer id){
         productUnitService.deleteProductUnit(id);
         return ResponseEntity.noContent().build();
     }

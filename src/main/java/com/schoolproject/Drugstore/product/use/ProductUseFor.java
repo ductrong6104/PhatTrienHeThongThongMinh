@@ -2,6 +2,8 @@ package com.schoolproject.Drugstore.product.use;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.product.product.Product;
 
 import jakarta.persistence.Column;
@@ -24,12 +26,15 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductUseFor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "useForId")
-    private int id;
+    private Integer id;
 
     @Column(name = "useForName")
     private String name;
@@ -40,4 +45,8 @@ public class ProductUseFor {
     @ToString.Exclude
     private Collection<Product> products;
 
+    public ProductUseFor(String name, Collection<Product> products) {
+        this.name = name;
+        this.products = products;
+    }
 }

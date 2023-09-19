@@ -70,4 +70,15 @@ public class Customer {
     @ToString.Exclude
     private Collection<Order> orders;
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    public Customer(String firstName, String lastName, String email, String phoneNumber, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+    }
 }

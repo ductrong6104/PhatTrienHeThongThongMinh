@@ -2,6 +2,8 @@ package com.schoolproject.Drugstore.product.ingredient;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.product.product.Product;
 
 import jakarta.persistence.Column;
@@ -19,11 +21,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// import tang use cho he thong thong minh
 @Entity
 @Table(name = "ProductIngredient")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductIngredient {
 
     @Id
@@ -43,4 +49,9 @@ public class ProductIngredient {
     @ToString.Exclude
     private Collection<Product> products;
 
+    public ProductIngredient(String name, String description, Collection<Product> products) {
+        this.name = name;
+        this.description = description;
+        this.products = products;
+    }
 }

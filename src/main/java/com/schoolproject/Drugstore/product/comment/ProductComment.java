@@ -38,8 +38,8 @@ public class ProductComment {
     @Column(name = "commentId")
     private Integer id;
 
-    @Column(name = "[content]")
-    private int content;
+    @Column(name = "subject")
+    private String subject;
 
     @ManyToOne
     @JoinColumn(name = "productId")
@@ -59,4 +59,10 @@ public class ProductComment {
     @ToString.Exclude
     private ProductComment productComment;
 
+    public ProductComment(String subject, Product product, Customer customer, ProductComment productComment) {
+        this.subject = subject;
+        this.product = product;
+        this.customer = customer;
+        this.productComment = productComment;
+    }
 }

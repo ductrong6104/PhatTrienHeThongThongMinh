@@ -9,11 +9,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class ProductCategoryModelAssembler implements RepresentationModelAssembler<ProductCategory, EntityModel<ProductCategory>> {
+public class ProductCategoryModelAssembler implements RepresentationModelAssembler<ProductCategoryDto, EntityModel<ProductCategoryDto>> {
     @Override
-    public EntityModel<ProductCategory> toModel(ProductCategory productCategory){
-        return EntityModel.of(productCategory,
-                linkTo(methodOn(ProductCategoryController.class).one(productCategory.getId())).withSelfRel(),
-                linkTo(methodOn(ProductCategoryController.class).all()).withRel("productCategorys"));
+    public EntityModel<ProductCategoryDto> toModel(ProductCategoryDto productCategoryDto){
+        return EntityModel.of(productCategoryDto,
+                linkTo(methodOn(ProductCategoryController.class).one(productCategoryDto.getId())).withSelfRel(),
+                linkTo(methodOn(ProductCategoryController.class).all()).withRel("products"));
     }
 }

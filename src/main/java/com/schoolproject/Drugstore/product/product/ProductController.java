@@ -43,8 +43,7 @@ ProductController {
 
     @PostMapping("/products")
     ResponseEntity<?> newProduct(@RequestBody ProductCreationDto productCreationDto){
-        Product product = productMapperDto.toProduct(productCreationDto);
-        EntityModel<ProductDto> productEntityModel = productModelAssembler.toModel(productService.addProduct(product));
+        EntityModel<ProductDto> productEntityModel = productModelAssembler.toModel(productService.addProduct(productCreationDto));
         return ResponseEntity.created(productEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productEntityModel);
     }
 

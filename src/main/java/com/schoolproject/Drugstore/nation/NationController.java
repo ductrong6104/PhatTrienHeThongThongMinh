@@ -1,6 +1,7 @@
 package com.schoolproject.Drugstore.nation;
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -16,38 +17,41 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class NationController {
+public class
+NationController {
     private final NationService nationService;
     private final NationModelAssembler nationModelAssembler;
+    private final NationMapperDto nationMapperDto;
 
 
     @Autowired
-    public NationController(NationService nationService, NationModelAssembler nationModelAssembler) {
+    public NationController(NationService nationService, NationModelAssembler nationModelAssembler, NationMapperDto nationMapperDto) {
         this.nationService = nationService;
         this.nationModelAssembler = nationModelAssembler;
+        this.nationMapperDto = nationMapperDto;
     }
 
     @GetMapping("/nations/{id}")
     EntityModel<?> one(@PathVariable Integer id){
-        Nation nation = nationService.getNationById(id);
-        return nationModelAssembler.toModel(nation);
+        NationDto nationDto = nationService.getProductById(id);
+        return nationModelAssembler.toModel(nationDto);
     }
     @GetMapping("/nations")
-    CollectionModel<EntityModel<Nation>> all(){
-        List<EntityModel<Nation>> nations = nationService.getAllNations().stream().map(nationModelAssembler::toModel).collect(Collectors.toList());
+    CollectionModel<EntityModel<NationDto>> all(){
+        List<EntityModel<NationDto>> nations = nationService.getAllProducts().stream().map(nationModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(nations, linkTo(methodOn(NationController.class).all()).withSelfRel());
     }
 
     @PostMapping("/nations")
-    ResponseEntity<?> newNation(@RequestBody Nation nation){
-        EntityModel<Nation> nationEntityModel = nationModelAssembler.toModel(nationService.addNation(nation));
+    ResponseEntity<?> newNation(@RequestBody NationCreationDto nationCreationDto){
+        EntityModel<NationDto> nationEntityModel = nationModelAssembler.toModel(nationService.addNation(nationCreationDto));
         return ResponseEntity.created(nationEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(nationEntityModel);
     }
 
     @PutMapping("nations/{id}")
-    ResponseEntity<?> replaceNation(@RequestBody Nation nation, @PathVariable Integer id){
-        Nation updateNation = nationService.updateNation(nation, id);
-        EntityModel<Nation> nationEntityModel = nationModelAssembler.toModel(updateNation);
+    ResponseEntity<?> replaceNation(@RequestBody NationCreationDto nationCreationDto, @PathVariable Integer id){
+        NationDto updateNation = nationService.updateNation(nationCreationDto, id);
+        EntityModel<NationDto> nationEntityModel = nationModelAssembler.toModel(updateNation);
         return ResponseEntity.created(nationEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(nationEntityModel);
     }
 

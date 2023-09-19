@@ -6,50 +6,53 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductSpecifyForService {
     private final ProductSpecifyForRepository productSpecifyForRepository;
+    private final ProductSpecifyForMapperDto productSpecifyForMapperDto;
+
+
     @Autowired
-    public ProductSpecifyForService(ProductSpecifyForRepository productSpecifyForRepository) {
+    public ProductSpecifyForService(ProductSpecifyForRepository productSpecifyForRepository, ProductSpecifyForMapperDto productSpecifyForMapperDto) {
         this.productSpecifyForRepository = productSpecifyForRepository;
+        this.productSpecifyForMapperDto = productSpecifyForMapperDto;
+
     }
 
-    public Collection<ProductSpecifyFor> getAllProductSpecifyFors(){
-        List<ProductSpecifyFor> productSpecifyFors = productSpecifyForRepository.findAll();
-        for (ProductSpecifyFor b: productSpecifyFors){
-            System.out.println(b);
-        }
-        return productSpecifyFors;
+    public Collection<ProductSpecifyForDto> getAllProducts(){
+        return productSpecifyForRepository.findAll().stream().map(productSpecifyFor -> productSpecifyForMapperDto.toDTO(productSpecifyFor)).toList();
     }
 
-    public ProductSpecifyFor getProductSpecifyForById(Integer id){
+    public ProductSpecifyForDto getProductById(Integer id){
         Optional<ProductSpecifyFor> productSpecifyFor =  productSpecifyForRepository.findById(id);
         if (productSpecifyFor.isEmpty()){
             throw new DataNotFoundException(id, ProductSpecifyFor.class.getSimpleName());
 
         }
-        return productSpecifyForRepository.getReferenceById(id);
+        return productSpecifyForMapperDto.toDTO(productSpecifyForRepository.getReferenceById(id));
     }
 
-    public ProductSpecifyFor updateProductSpecifyFor(ProductSpecifyFor newProductSpecifyFor, Integer id){
+    public ProductSpecifyForDto updateProductSpecifyFor(ProductSpecifyForCreationDto newProductSpecifyFor, Integer id){
         // parameter trong map se la object ma repository tim duoc
-
+        ProductSpecifyFor convertProductSpecifyFor = productSpecifyForMapperDto.toProductSpecifyFor(newProductSpecifyFor);
         ProductSpecifyFor updateProductSpecifyFor = productSpecifyForRepository.findById(id).map(productSpecifyFor ->
                 {
-                    
+                // update productSpecifyFor existing
                     return productSpecifyForRepository.save(productSpecifyFor);
                 }).orElseGet(()->{
-            newProductSpecifyFor.setId(id);
-            return productSpecifyForRepository.save(newProductSpecifyFor);
+                    // create new productSpecifyFor
+                convertProductSpecifyFor.setId(id);
+                return productSpecifyForRepository.save(convertProductSpecifyFor);
         });
+        return productSpecifyForMapperDto.toDTO(updateProductSpecifyFor);
 
-        return updateProductSpecifyFor;
     }
-    public ProductSpecifyFor addProductSpecifyFor(ProductSpecifyFor productSpecifyFor){
-        return productSpecifyForRepository.save(productSpecifyFor);
+    public ProductSpecifyForDto addProductSpecifyFor(ProductSpecifyForCreationDto productSpecifyForCreationDto){
+        ProductSpecifyFor productSpecifyFor = productSpecifyForMapperDto.toProductSpecifyFor(productSpecifyForCreationDto);
+        productSpecifyForRepository.save(productSpecifyFor);
+        return productSpecifyForMapperDto.toDTO(productSpecifyFor);
     }
 
     public void deleteProductSpecifyFor(Integer id){

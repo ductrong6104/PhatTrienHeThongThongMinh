@@ -1,6 +1,6 @@
 package com.schoolproject.Drugstore.product.brand;
 
-import java.util.Collection;
+
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -20,13 +20,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
+
+import java.util.Collection;
 
 @Table(name = "Brand")
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
@@ -59,4 +61,11 @@ public class Brand {
     @ToString.Exclude
     private Collection<Product> products;
 
+    public Brand(String name, String description, String avatar, Nation nation, Collection<Product> products) {
+        this.name = name;
+        this.description = description;
+        this.avatar = avatar;
+        this.nation = nation;
+        this.products = products;
+    }
 }

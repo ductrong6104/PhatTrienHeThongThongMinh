@@ -2,6 +2,8 @@ package com.schoolproject.Drugstore.product.specify;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.product.product.Product;
 
 import jakarta.persistence.Column;
@@ -24,6 +26,9 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductSpecifyFor {
 
     @Id
@@ -40,4 +45,8 @@ public class ProductSpecifyFor {
     @ToString.Exclude
     private Collection<Product> products;
 
+    public ProductSpecifyFor(String name, Collection<Product> products) {
+        this.name = name;
+        this.products = products;
+    }
 }
