@@ -9,6 +9,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,8 +63,8 @@ public class ProductGroupController {
     }
 
     @GetMapping("/productGroups/typeId")
-    EntityModel<?> getProductGroupByTypeId(@RequestParam Integer typeId){
-        ProductGroupDto productGroupDto = productGroupService.getProductByTypeId(typeId);
-        return productGroupModelAssembler.toModel(productGroupDto);
+    CollectionModel<EntityModel<ProductGroupDto>> getProductGroupsByTypeId(@RequestParam Integer typeId){
+        List<EntityModel<ProductGroupDto>> productGroups = productGroupService.getProductsByTypeId(typeId).stream().map(productGroupModelAssembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(productGroups, linkTo(methodOn(ProductGroupController.class).all()).withSelfRel());
     }
 }
