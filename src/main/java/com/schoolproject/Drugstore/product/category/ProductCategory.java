@@ -25,6 +25,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Entity
 @Table(name = "ProductCategory")

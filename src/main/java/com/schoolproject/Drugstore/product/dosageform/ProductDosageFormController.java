@@ -17,8 +17,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class
-ProductDosageFormController {
+@CrossOrigin
+public class ProductDosageFormController {
     private final ProductDosageFormService productDosageFormService;
     private final ProductDosageFormModelAssembler productDosageFormModelAssembler;
     private final ProductDosageFormMapperDto productDosageFormMapperDto;

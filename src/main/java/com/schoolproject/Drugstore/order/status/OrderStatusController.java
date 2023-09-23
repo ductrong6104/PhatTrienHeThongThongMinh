@@ -16,8 +16,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class
-OrderStatusController {
+@CrossOrigin
+public class OrderStatusController {
     private final OrderStatusService orderStatusService;
     private final OrderStatusModelAssembler orderStatusModelAssembler;
     private final OrderStatusMapperDto orderStatusMapperDto;

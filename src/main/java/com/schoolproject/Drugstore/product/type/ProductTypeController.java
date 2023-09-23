@@ -17,8 +17,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class
-ProductTypeController {
+@CrossOrigin
+public class ProductTypeController {
     private final ProductTypeService productTypeService;
     private final ProductTypeModelAssembler productTypeModelAssembler;
     private final ProductTypeMapperDto productTypeMapperDto;

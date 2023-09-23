@@ -16,8 +16,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class
-PaymentController {
+@CrossOrigin
+public class PaymentController {
     private final PaymentService paymentService;
     private final PaymentModelAssembler paymentModelAssembler;
     private final PaymentMapperDto paymentMapperDto;
