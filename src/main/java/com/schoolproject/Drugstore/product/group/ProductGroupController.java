@@ -60,4 +60,10 @@ ProductGroupController {
         productGroupService.deleteProductGroup(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/productGroups/typeId")
+    EntityModel<?> getProductGroupByTypeId(@RequestParam Integer typeId){
+        ProductGroupDto productGroupDto = productGroupService.getProductByTypeId(typeId);
+        return productGroupModelAssembler.toModel(productGroupDto);
+    }
 }

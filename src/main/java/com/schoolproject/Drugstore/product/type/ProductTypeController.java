@@ -60,4 +60,6 @@ ProductTypeController {
         productTypeService.deleteProductType(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

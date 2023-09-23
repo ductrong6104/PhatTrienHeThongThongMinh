@@ -66,6 +66,13 @@ public class ProductGroupService {
     public void deleteProductGroup(Integer id){
         productGroupRepository.deleteById(id);
     }
+    public ProductGroupDto getProductByTypeId(Integer typeId){
+        Optional<ProductGroup> productGroup =  productGroupRepository.getProductGroupByTypeId(typeId);
+        if (productGroup.isEmpty()){
+            throw new DataNotFoundException(typeId, ProductGroup.class.getSimpleName());
 
+        }
+        return productGroupMapperDto.toDTO(productGroup.get());
+    }
 
 }
