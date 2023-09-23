@@ -14,6 +14,6 @@ import java.util.Collection;
 @NoArgsConstructor
 public class ProductUnitDto {
     private Integer id;
-    private String name;
+    private String productUnitName;
     private Collection<String> products;
 }

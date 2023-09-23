@@ -17,8 +17,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class
-BrandController {
+@CrossOrigin
+public class BrandController {
     private final BrandService brandService;
     private final BrandModelAssembler brandModelAssembler;
     private final BrandMapperDto brandMapperDto;

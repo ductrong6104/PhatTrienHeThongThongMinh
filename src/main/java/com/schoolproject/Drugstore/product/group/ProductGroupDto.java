@@ -13,7 +13,7 @@ import java.util.Collection;
 @NoArgsConstructor
 public class ProductGroupDto {
     private Integer id;
-    private String productName;
+    private String productGroupName;
     private String typeName;
     private Collection<String> productCategories;
 

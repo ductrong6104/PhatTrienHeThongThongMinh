@@ -21,6 +21,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Collection;
 

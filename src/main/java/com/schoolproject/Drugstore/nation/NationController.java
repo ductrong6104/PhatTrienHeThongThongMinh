@@ -17,8 +17,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
-public class
-NationController {
+@CrossOrigin
+public class NationController {
     private final NationService nationService;
     private final NationModelAssembler nationModelAssembler;
     private final NationMapperDto nationMapperDto;

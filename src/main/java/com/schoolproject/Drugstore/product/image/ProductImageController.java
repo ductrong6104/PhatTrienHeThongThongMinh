@@ -17,6 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping()
+@CrossOrigin
 public class ProductImageController {
     private final ProductImageService productImageService;
     private final ProductImageModelAssembler productImageModelAssembler;

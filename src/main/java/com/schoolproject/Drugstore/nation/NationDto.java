@@ -13,7 +13,7 @@ import java.util.Collection;
 @NoArgsConstructor
 public class NationDto {
     private Integer id;
-    private String name;
+    private String nationName;
     private Collection<String> brandNames;
 
 }
