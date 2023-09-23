@@ -36,6 +36,13 @@ NationController {
         NationDto nationDto = nationService.getProductById(id);
         return nationModelAssembler.toModel(nationDto);
     }
+
+    @GetMapping("/nationsId")
+    CollectionModel<EntityModel<NationDto>> getNationById(@RequestParam("id") Integer id){
+        System.out.println("id nation: " + id);
+        List<EntityModel<NationDto>> nations = nationService.getAllProducts().stream().map(nationModelAssembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(nations, linkTo(methodOn(NationController.class).all()).withSelfRel());
+    }
     @GetMapping("/nations")
     CollectionModel<EntityModel<NationDto>> all(){
         List<EntityModel<NationDto>> nations = nationService.getAllProducts().stream().map(nationModelAssembler::toModel).collect(Collectors.toList());
