@@ -1,4 +1,4 @@
-package com.schoolproject.Drugstore.product.type;
+package com.schoolproject.Drugstore.product.dosageform;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductTypeDto {
-
+public class ProductDosageFormDto {
     private Integer id;
     private String name;
-
 }

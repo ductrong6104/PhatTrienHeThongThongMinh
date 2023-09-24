@@ -1,4 +1,4 @@
-package com.schoolproject.Drugstore.product.type;
+package com.schoolproject.Drugstore.nation;
 
 import java.util.Collection;
 
@@ -17,51 +17,51 @@ import lombok.RequiredArgsConstructor;
 import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
 
 @RestController
-@RequestMapping("/product/type")
+@RequestMapping("/nation")
 @RequiredArgsConstructor
 @CrossOrigin
-public class PoroductTypeController {
+public class NationController {
 
-    private final ProductTypeService productTypeService;
+    private final NationService nationService;
 
     @GetMapping("")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok().body(productTypeService.getAll());
+        return ResponseEntity.ok().body(nationService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Integer id) {
-        return ResponseEntity.ok().body(productTypeService.getById(id));
+        return ResponseEntity.ok().body(nationService.getById(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody(required = false) ProductTypeDto productTypeDto) {
+    public ResponseEntity<?> create(@RequestBody(required = false) NationDto nationDto) {
         // Request body empty
-        if (productTypeDto == null) {
+        if (nationDto == null) {
             throw new RequestBodyEmptyException();
         }
-        ProductTypeDto result = productTypeService.create(productTypeDto);
+        NationDto result = nationService.create(nationDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @PutMapping("")
-    public ResponseEntity<?> edit(@RequestBody(required = false) ProductTypeDto productTypeDto) {
-        if (productTypeDto == null) {
+    public ResponseEntity<?> edit(@RequestBody(required = false) NationDto nationDto) {
+        if (nationDto == null) {
             throw new RequestBodyEmptyException();
         }
-        ProductTypeDto result = productTypeService.edit(productTypeDto);
+        NationDto result = nationService.edit(nationDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Integer id) {
-        ProductTypeDto result = productTypeService.delete(id);
+        NationDto result = nationService.delete(id);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @DeleteMapping("")
     public ResponseEntity<?> delete() throws Exception {
-        Collection<ProductTypeDto> results = productTypeService.deleteAll();
+        Collection<NationDto> results = nationService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
     }
 }

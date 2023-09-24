@@ -37,7 +37,7 @@ public class ProductType {
     private String name;
 
     // Một loại thuốc có nhiều nhóm thuốc
-    @OneToMany(mappedBy = "productType", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "productType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<ProductGroup> productGroups;

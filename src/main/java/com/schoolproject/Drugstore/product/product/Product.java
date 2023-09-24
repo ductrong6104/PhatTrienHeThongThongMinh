@@ -3,7 +3,7 @@ package com.schoolproject.Drugstore.product.product;
 import java.util.Collection;
 
 import com.schoolproject.Drugstore.order.order.Order;
-import com.schoolproject.Drugstore.product.brand.Brand;
+import com.schoolproject.Drugstore.brand.Brand;
 import com.schoolproject.Drugstore.product.category.ProductCategory;
 import com.schoolproject.Drugstore.product.comment.ProductComment;
 import com.schoolproject.Drugstore.product.dosageform.ProductDosageForm;
@@ -28,6 +28,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Product {
 
     @Id

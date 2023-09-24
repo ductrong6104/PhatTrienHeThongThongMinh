@@ -1,4 +1,4 @@
-package com.schoolproject.Drugstore.product.type;
+package com.schoolproject.Drugstore.brand;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductTypeDto {
-
+public class BrandDto {
     private Integer id;
     private String name;
+    private String description;
+    private String avatar;
+    private Integer nationId;
 
 }

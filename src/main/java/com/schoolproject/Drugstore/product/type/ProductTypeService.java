@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.schoolproject.Drugstore.exception.customeException.CannotCreateDataException;
 import com.schoolproject.Drugstore.exception.customeException.CannotDeleteDataException;
+import com.schoolproject.Drugstore.exception.customeException.CannotEditDataException;
 import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -17,56 +18,72 @@ import lombok.RequiredArgsConstructor;
 public class ProductTypeService {
 
     private final ProductTypeRepository productTypeRepository;
+    private final ProductTypeMapper productTypeMapper;
+
 
     public Collection<ProductTypeDto> getAll() {
         List<ProductTypeDto> list = productTypeRepository.findAll().stream()
-                .map(type -> new ProductTypeDto(type.getId(), type.getName()))
+                .map(productTypeMapper::toDto)
                 .collect(Collectors.toList());
         return list;
     }
 
     public ProductTypeDto getById(int id) {
         ProductType productType = productTypeRepository.findById(id).orElseThrow(() -> new DataNotFoundException());
-        return new ProductTypeDto(productType.getId(), productType.getName());
+        return productTypeMapper.toDto(productType);
     }
 
     public ProductTypeDto create(ProductTypeDto productTypeDto) {
-
+        productTypeDto.setId(0);
         try {
-            new ProductType();
-            ProductType productType = productTypeRepository
-                    .save(ProductType.builder().id(0).name(productTypeDto.getName()).build());
-
-            return new ProductTypeDto(productType.getId(), productType.getName());
+            ProductType productType = productTypeRepository.save(productTypeMapper.toEntity(productTypeDto));
+            return productTypeMapper.toDto(productType);
         } catch (Exception e) {
             throw new CannotCreateDataException();
         }
     }
 
-    public ProductTypeDto edit(Integer id, ProductTypeDto productTypeDto) {
-        ProductType productType = productTypeRepository.findById(id).map((type) -> {
-            type.setName(productTypeDto.getName());
-            return productTypeRepository.save(type);
-        }).orElseThrow(() -> new DataNotFoundException());
-
-        return ProductTypeDto.builder().id(productType.getId()).name(productType.getName()).build();
+    /*
+        Chỉ cho edit ko cho thêm
+        Phải find trong repository ra nếu không thì có thể bị nhầm thành thêm
+        Có thể đối tượng chuyển đổi (entity và dto) có nhiểu trường nên tốt nhất cho mapper chuyển đổi cho nhanh
+    */
+    public ProductTypeDto edit(ProductTypeDto productTypeDto) {
+        Integer id = productTypeDto.getId();
+        if(id == null){
+            throw new DataNotFoundException();
+        }
+        ProductType productType = productTypeRepository
+            .findById(productTypeDto.getId())
+            .orElseThrow(() -> new DataNotFoundException());
+        
+        try {
+            productType = productTypeMapper.toEntity(productTypeDto);
+            productTypeRepository.save(productType);
+            return productTypeMapper.toDto(productType);
+        } catch (Exception e) {
+            throw new CannotEditDataException();
+        }
     }
 
     public ProductTypeDto delete(Integer id) {
-        ProductType productType = productTypeRepository.findById(id).orElseThrow(() -> new DataNotFoundException());
-
+        if(id == null){
+            throw new DataNotFoundException();
+        }
+        ProductType productType = productTypeRepository
+            .findById(id)
+            .orElseThrow(() -> new DataNotFoundException());
         try {
             productTypeRepository.delete(productType);
         } catch (Exception ex) {
             throw new CannotDeleteDataException();
         }
 
-        return ProductTypeDto.builder().id(productType.getId()).name(productType.getName()).build();
+        return productTypeMapper.toDto(productType);
     }
 
     public Collection<ProductTypeDto> deleteAll() throws Exception {
         Collection<ProductTypeDto> list = getAll();
-
         try {
             productTypeRepository.deleteAll();
         } catch (Exception ex) {

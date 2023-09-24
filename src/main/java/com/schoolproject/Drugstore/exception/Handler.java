@@ -8,7 +8,10 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.schoolproject.Drugstore.exception.customeException.CannotCreateDataException;
 import com.schoolproject.Drugstore.exception.customeException.CannotDeleteDataException;
+import com.schoolproject.Drugstore.exception.customeException.CannotEditDataException;
 import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
+import com.schoolproject.Drugstore.exception.customeException.NotFoundProductTypeException;
+import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
 
 @RestControllerAdvice
 public class Handler {
@@ -25,10 +28,28 @@ public class Handler {
         return new ErrorMessage(ErrorMessage.CANNOT_CREATE, "Không thể tạo đối tượng");
     }
 
+        @ExceptionHandler(CannotEditDataException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage cannotEditDataException(Exception ex, WebRequest request) {
+        return new ErrorMessage(ErrorMessage.CANNOT_CREATE, "Không thể sửa đối tượng");
+    }
+
     @ExceptionHandler(CannotDeleteDataException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage cannotDeleteDataException(Exception ex, WebRequest request) {
         return new ErrorMessage(ErrorMessage.CANNOT_DELETE, "Không thể xóa đối tượng");
     }
 
+    @ExceptionHandler(RequestBodyEmptyException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage requestBodyEmptyException(Exception ex, WebRequest request) {
+        return new ErrorMessage(ErrorMessage.REQUEST_BODY_EMPTY, "Request body is empty");
+    }
+
+    
+    @ExceptionHandler(NotFoundProductTypeException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage notFoundProductTypeException(Exception ex, WebRequest request) {
+        return new ErrorMessage(ErrorMessage.NOTFOUND_PRODUCTTYPE, "Not found product type");
+    }
 }

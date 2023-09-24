@@ -1,4 +1,4 @@
-package com.schoolproject.Drugstore.product.type;
+package com.schoolproject.Drugstore.brand;
 
 import java.util.Collection;
 
@@ -11,57 +11,61 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
 
 @RestController
-@RequestMapping("/product/type")
+@RequestMapping("/brand")
 @RequiredArgsConstructor
 @CrossOrigin
-public class PoroductTypeController {
+public class BrandController {
 
-    private final ProductTypeService productTypeService;
+    private final BrandService brandService;
 
     @GetMapping("")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok().body(productTypeService.getAll());
+    public ResponseEntity<?> getAll(@RequestParam(name = "nation", required = false) Integer nationId) {
+        if (nationId == null)
+            return ResponseEntity.ok().body(brandService.getAll());
+        else
+            return ResponseEntity.ok().body(brandService.getByNation(nationId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Integer id) {
-        return ResponseEntity.ok().body(productTypeService.getById(id));
+        return ResponseEntity.ok().body(brandService.getById(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody(required = false) ProductTypeDto productTypeDto) {
+    public ResponseEntity<?> create(@RequestBody(required = false) BrandDto brandDto) {
         // Request body empty
-        if (productTypeDto == null) {
+        if (brandDto == null) {
             throw new RequestBodyEmptyException();
         }
-        ProductTypeDto result = productTypeService.create(productTypeDto);
+        BrandDto result = brandService.create(brandDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @PutMapping("")
-    public ResponseEntity<?> edit(@RequestBody(required = false) ProductTypeDto productTypeDto) {
-        if (productTypeDto == null) {
+    public ResponseEntity<?> edit(@RequestBody(required = false) BrandDto brandDto) {
+        if (brandDto == null) {
             throw new RequestBodyEmptyException();
         }
-        ProductTypeDto result = productTypeService.edit(productTypeDto);
+        BrandDto result = brandService.edit(brandDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Integer id) {
-        ProductTypeDto result = productTypeService.delete(id);
+        BrandDto result = brandService.delete(id);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @DeleteMapping("")
     public ResponseEntity<?> delete() throws Exception {
-        Collection<ProductTypeDto> results = productTypeService.deleteAll();
+        Collection<BrandDto> results = brandService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
     }
 }

@@ -1,4 +1,4 @@
-package com.schoolproject.Drugstore.product.type;
+package com.schoolproject.Drugstore.product.dosageform;
 
 import java.util.Collection;
 
@@ -17,51 +17,51 @@ import lombok.RequiredArgsConstructor;
 import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
 
 @RestController
-@RequestMapping("/product/type")
+@RequestMapping("/product/dosageform")
 @RequiredArgsConstructor
 @CrossOrigin
-public class PoroductTypeController {
+public class ProductDosageFormController {
 
-    private final ProductTypeService productTypeService;
+    private final ProductDosageFormService productDosageFormService;
 
     @GetMapping("")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok().body(productTypeService.getAll());
+        return ResponseEntity.ok().body(productDosageFormService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Integer id) {
-        return ResponseEntity.ok().body(productTypeService.getById(id));
+        return ResponseEntity.ok().body(productDosageFormService.getById(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody(required = false) ProductTypeDto productTypeDto) {
+    public ResponseEntity<?> create(@RequestBody(required = false) ProductDosageFormDto productDosageFormDto) {
         // Request body empty
-        if (productTypeDto == null) {
+        if (productDosageFormDto == null) {
             throw new RequestBodyEmptyException();
         }
-        ProductTypeDto result = productTypeService.create(productTypeDto);
+        ProductDosageFormDto result = productDosageFormService.create(productDosageFormDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @PutMapping("")
-    public ResponseEntity<?> edit(@RequestBody(required = false) ProductTypeDto productTypeDto) {
-        if (productTypeDto == null) {
+    public ResponseEntity<?> edit(@RequestBody(required = false) ProductDosageFormDto productDosageFormDto) {
+        if (productDosageFormDto == null) {
             throw new RequestBodyEmptyException();
         }
-        ProductTypeDto result = productTypeService.edit(productTypeDto);
+        ProductDosageFormDto result = productDosageFormService.edit(productDosageFormDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Integer id) {
-        ProductTypeDto result = productTypeService.delete(id);
+        ProductDosageFormDto result = productDosageFormService.delete(id);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @DeleteMapping("")
     public ResponseEntity<?> delete() throws Exception {
-        Collection<ProductTypeDto> results = productTypeService.deleteAll();
+        Collection<ProductDosageFormDto> results = productDosageFormService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
     }
 }

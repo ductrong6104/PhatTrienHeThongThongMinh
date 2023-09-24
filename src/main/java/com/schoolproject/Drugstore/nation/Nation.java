@@ -1,9 +1,8 @@
 package com.schoolproject.Drugstore.nation;
 
-
 import java.util.Collection;
 
-import com.schoolproject.Drugstore.product.brand.Brand;
+import com.schoolproject.Drugstore.brand.Brand;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -25,6 +25,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Nation {
 
     @Id
@@ -35,8 +36,7 @@ public class Nation {
     @Column(name = "nationName", unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "nation", fetch = FetchType.LAZY, cascade =
-    CascadeType.ALL)
+    @OneToMany(mappedBy = "nation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Brand> brands;

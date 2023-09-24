@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProductDosageForm {
 
     @Id
@@ -38,6 +40,5 @@ public class ProductDosageForm {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Product> products;
-
 
 }
