@@ -11,6 +11,7 @@ import com.schoolproject.Drugstore.exception.customeException.CannotEditDataExce
 import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
 import com.schoolproject.Drugstore.nation.Nation;
 import com.schoolproject.Drugstore.nation.NationRepository;
+import com.schoolproject.Drugstore.product.type.ProductTypeDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -102,6 +103,13 @@ public class BrandService {
         } catch (Exception ex) {
             throw new CannotDeleteDataException();
         }
+        return list;
+    }
+
+    public Collection<BrandDto> getByName(String name) {
+        List<BrandDto> list = brandRepository.findByName(name).stream()
+                .map(brandMapper::toDto)
+                .collect(Collectors.toList());
         return list;
     }
 }

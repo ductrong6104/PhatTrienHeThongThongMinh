@@ -103,4 +103,11 @@ public class ProductGroupService {
         }
         return list;
     }
+
+    public Collection<ProductGroupDto> getByName(String name) {
+        List<ProductGroupDto> list = productGroupRepository.findByName(name).stream()
+                .map(productGroupMapper::toDto)
+                .collect(Collectors.toList());
+        return list;
+    }
 }

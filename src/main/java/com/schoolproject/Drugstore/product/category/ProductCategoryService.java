@@ -106,4 +106,11 @@ public class ProductCategoryService {
         }
         return list;
     }
+
+    public Collection<ProductCategoryDto> getByName(String name) {
+        List<ProductCategoryDto> list = productCategoryRepository.findByName(name).stream()
+                .map(productCategoryMapper::toDto)
+                .collect(Collectors.toList());
+        return list;
+    }
 }

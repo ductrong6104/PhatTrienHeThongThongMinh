@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.schoolproject.Drugstore.product.type.ProductType;
 
-public interface ProductGroupRepository  extends JpaRepository<ProductGroup, Integer>{
+public interface ProductGroupRepository extends JpaRepository<ProductGroup, Integer> {
     List<ProductGroup> findByProductType(ProductType productType);
+
+    List<ProductGroup> findByName(String name);
+
 }

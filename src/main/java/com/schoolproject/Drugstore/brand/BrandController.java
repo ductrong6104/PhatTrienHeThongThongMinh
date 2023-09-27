@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
+import com.schoolproject.Drugstore.exception.customeException.RequestNotFoundException;
 
 @RestController
 @RequestMapping("/brand")
@@ -27,6 +28,11 @@ public class BrandController {
 
     @GetMapping("")
     public ResponseEntity<?> getAll(@RequestParam(name = "nation", required = false) Integer nationId) {
+        try {
+            Thread.sleep(3000);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
         if (nationId == null)
             return ResponseEntity.ok().body(brandService.getAll());
         else
@@ -42,9 +48,12 @@ public class BrandController {
     public ResponseEntity<?> create(@RequestBody(required = false) BrandDto brandDto) {
         // Request body empty
         if (brandDto == null) {
+
             throw new RequestBodyEmptyException();
         }
+
         BrandDto result = brandService.create(brandDto);
+
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
@@ -57,15 +66,26 @@ public class BrandController {
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Integer id) {
+    @DeleteMapping("")
+    public ResponseEntity<?> delete(@RequestParam(name = "id") Integer id) {
         BrandDto result = brandService.delete(id);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/all")
     public ResponseEntity<?> delete() throws Exception {
         Collection<BrandDto> results = brandService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
+    }
+
+    // orthers
+    @GetMapping("/check")
+    public ResponseEntity<?> checkBrandName(@RequestParam(name = "field", required = true) String field,
+            @RequestParam(name = "value", required = true) String value) {
+        if (field.equals("name")) {
+            Collection<BrandDto> results = brandService.getByName(value);
+            return ResponseEntity.ok().body(results != null ? results : new Object());
+        }
+        throw new RequestNotFoundException();
     }
 }

@@ -3,16 +3,12 @@ package com.schoolproject.Drugstore.product.dosageform;
 import org.springframework.stereotype.Component;
 
 import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
-import com.schoolproject.Drugstore.nation.Nation;
-import com.schoolproject.Drugstore.product.product.Product;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class ProductDosageFormMapper {
-
-    private final ProductDosageFormRepository productDosageFormRepository;
 
     /*
      * Có 2 th mapper

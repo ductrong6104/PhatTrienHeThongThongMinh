@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NationMapper {
 
-    private final NationRepository nationRepository;
-
     /*
      * Có 2 th mapper
      * 1. Tạo mới

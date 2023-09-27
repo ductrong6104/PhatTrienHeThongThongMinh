@@ -1,5 +1,6 @@
 package com.schoolproject.Drugstore.product.product;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,8 +16,14 @@ import com.schoolproject.Drugstore.product.category.ProductCategory;
 import com.schoolproject.Drugstore.product.category.ProductCategoryRepository;
 import com.schoolproject.Drugstore.product.dosageform.ProductDosageForm;
 import com.schoolproject.Drugstore.product.dosageform.ProductDosageFormRepository;
-import com.schoolproject.Drugstore.product.group.ProductGroup;
-import com.schoolproject.Drugstore.product.group.ProductGroupRepository;
+import com.schoolproject.Drugstore.product.ingredient.ProductIngredient;
+import com.schoolproject.Drugstore.product.ingredient.ProductIngredientRepository;
+import com.schoolproject.Drugstore.product.specify.ProductSpecifyFor;
+import com.schoolproject.Drugstore.product.specify.ProductSpecifyForRepository;
+import com.schoolproject.Drugstore.product.unit.ProductUnit;
+import com.schoolproject.Drugstore.product.unit.ProductUnitRepository;
+import com.schoolproject.Drugstore.product.use.ProductUseFor;
+import com.schoolproject.Drugstore.product.use.ProductUseForRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +35,10 @@ public class ProductService {
     private final ProductCategoryRepository productCategoryRepository;
     private final BrandRepository brandRepository;
     private final ProductDosageFormRepository productDosageFormRepository;
+    private final ProductSpecifyForRepository productSpecifyForRepository;
+    private final ProductUseForRepository productUseForRepository;
+    private final ProductIngredientRepository productIngredientRepository;
+    private final ProductUnitRepository productUnitRepository;
 
     public Collection<ProductDto> getAll() {
         List<ProductDto> list = productRepository.findAll().stream()
@@ -146,5 +157,59 @@ public class ProductService {
             throw new CannotDeleteDataException();
         }
         return list;
+    }
+
+    /*
+     * 
+     */
+    public ProductDto editDetails(Integer id, ProductDetailsDto productDetailsDto) {
+
+        if (id == null || productDetailsDto == null) {
+            throw new DataNotFoundException();
+        }
+        Product product = productRepository
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException());
+
+        product.setProductSpecifyFors(new ArrayList<>());
+        product.setProductUseFors(new ArrayList<>());
+        product.setProductIngredients(new ArrayList<>());
+        product.setProductUnits(new ArrayList<>());
+
+        for (Integer specifyId : productDetailsDto.getSpecifyForId()) {
+            ProductSpecifyFor productSpecifyFor = productSpecifyForRepository
+                    .findById(specifyId)
+                    .orElseThrow(() -> new DataNotFoundException());
+            product.getProductSpecifyFors().add(productSpecifyFor);
+        }
+
+        for (Integer useForId : productDetailsDto.getUseForId()) {
+            ProductUseFor productUseFor = productUseForRepository
+                    .findById(useForId)
+                    .orElseThrow(() -> new DataNotFoundException());
+            product.getProductUseFors().add(productUseFor);
+        }
+
+        for (Integer ingredientId : productDetailsDto.getIngredientId()) {
+            ProductIngredient productIngredient = productIngredientRepository
+                    .findById(ingredientId)
+                    .orElseThrow(() -> new DataNotFoundException());
+            product.getProductIngredients().add(productIngredient);
+        }
+
+        for (Integer unitId : productDetailsDto.getUnitId()) {
+            ProductUnit productUnit = productUnitRepository
+                    .findById(unitId)
+                    .orElseThrow(() -> new DataNotFoundException());
+            product.getProductUnits().add(productUnit);
+        }
+
+        try {
+            productRepository.save(product);
+            return productMapper.toDto(product);
+        } catch (Exception e) {
+            throw new CannotEditDataException();
+        }
+
     }
 }

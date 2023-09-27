@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
+import com.schoolproject.Drugstore.exception.customeException.RequestNotFoundException;
 
 @RestController
 @RequestMapping("/nation")
@@ -53,15 +55,26 @@ public class NationController {
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Integer id) {
+    @DeleteMapping("")
+    public ResponseEntity<?> delete(@RequestParam(name = "id") Integer id) {
         NationDto result = nationService.delete(id);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/all")
     public ResponseEntity<?> delete() throws Exception {
         Collection<NationDto> results = nationService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
+    }
+
+    // orthers
+    @GetMapping("/check")
+    public ResponseEntity<?> checkNationName(@RequestParam(name = "field", required = true) String field,
+            @RequestParam(name = "value", required = true) String value) {
+        if (field.equals("name")) {
+            Collection<NationDto> results = nationService.getByName(value);
+            return ResponseEntity.ok().body(results != null ? results : new Object());
+        }
+        throw new RequestNotFoundException();
     }
 }

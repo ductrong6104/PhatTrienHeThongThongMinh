@@ -85,4 +85,11 @@ public class ProductDosageFormService {
         }
         return list;
     }
+
+    public Collection<ProductDosageFormDto> getByName(String name) {
+        List<ProductDosageFormDto> list = productDosageFormRepository.findByName(name).stream()
+                .map(productDosageFormMapper::toDto)
+                .collect(Collectors.toList());
+        return list;
+    }
 }

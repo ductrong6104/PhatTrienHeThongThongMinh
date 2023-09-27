@@ -3,7 +3,6 @@ package com.schoolproject.Drugstore.product.group;
 import org.springframework.stereotype.Component;
 
 import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
-import com.schoolproject.Drugstore.exception.customeException.NotFoundProductTypeException;
 import com.schoolproject.Drugstore.product.type.ProductType;
 import com.schoolproject.Drugstore.product.type.ProductTypeRepository;
 

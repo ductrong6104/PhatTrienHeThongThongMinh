@@ -80,4 +80,17 @@ public class ProductController {
         Collection<ProductDto> results = productService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
     }
+
+    @PutMapping("/details")
+    public ResponseEntity<?> editDetails(@RequestParam(name = "product", required = true) Integer productId,
+            @RequestBody(required = true) ProductDetailsDto productDetailsDto) throws InterruptedException {
+
+        Thread.sleep(5000);
+
+        if (productDetailsDto == null) {
+            throw new RequestBodyEmptyException();
+        }
+        ProductDto result = productService.editDetails(productId, productDetailsDto);
+        return ResponseEntity.ok().body(result != null ? result : new Object());
+    }
 }

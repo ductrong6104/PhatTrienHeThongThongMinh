@@ -12,6 +12,7 @@ import com.schoolproject.Drugstore.exception.customeException.CannotEditDataExce
 import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
 import com.schoolproject.Drugstore.exception.customeException.NotFoundProductTypeException;
 import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
+import com.schoolproject.Drugstore.exception.customeException.RequestNotFoundException;
 
 @RestControllerAdvice
 public class Handler {
@@ -28,7 +29,7 @@ public class Handler {
         return new ErrorMessage(ErrorMessage.CANNOT_CREATE, "Không thể tạo đối tượng");
     }
 
-        @ExceptionHandler(CannotEditDataException.class)
+    @ExceptionHandler(CannotEditDataException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage cannotEditDataException(Exception ex, WebRequest request) {
         return new ErrorMessage(ErrorMessage.CANNOT_CREATE, "Không thể sửa đối tượng");
@@ -46,10 +47,15 @@ public class Handler {
         return new ErrorMessage(ErrorMessage.REQUEST_BODY_EMPTY, "Request body is empty");
     }
 
-    
     @ExceptionHandler(NotFoundProductTypeException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage notFoundProductTypeException(Exception ex, WebRequest request) {
         return new ErrorMessage(ErrorMessage.NOTFOUND_PRODUCTTYPE, "Not found product type");
+    }
+
+    @ExceptionHandler(RequestNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage requestNotFoundException(Exception ex, WebRequest request) {
+        return new ErrorMessage(ErrorMessage.REQUEST_NOTFOUND, "Request not found");
     }
 }

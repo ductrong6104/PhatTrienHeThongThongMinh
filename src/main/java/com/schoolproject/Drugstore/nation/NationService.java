@@ -9,6 +9,7 @@ import com.schoolproject.Drugstore.exception.customeException.CannotCreateDataEx
 import com.schoolproject.Drugstore.exception.customeException.CannotDeleteDataException;
 import com.schoolproject.Drugstore.exception.customeException.CannotEditDataException;
 import com.schoolproject.Drugstore.exception.customeException.DataNotFoundException;
+import com.schoolproject.Drugstore.product.use.ProductUseForDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -82,6 +83,13 @@ public class NationService {
         } catch (Exception ex) {
             throw new CannotDeleteDataException();
         }
+        return list;
+    }
+
+    public Collection<NationDto> getByName(String name) {
+        List<NationDto> list = nationRepository.findByName(name).stream()
+                .map(nationMapper::toDto)
+                .collect(Collectors.toList());
         return list;
     }
 }

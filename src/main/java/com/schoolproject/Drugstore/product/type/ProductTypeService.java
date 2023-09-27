@@ -20,7 +20,6 @@ public class ProductTypeService {
     private final ProductTypeRepository productTypeRepository;
     private final ProductTypeMapper productTypeMapper;
 
-
     public Collection<ProductTypeDto> getAll() {
         List<ProductTypeDto> list = productTypeRepository.findAll().stream()
                 .map(productTypeMapper::toDto)
@@ -44,19 +43,20 @@ public class ProductTypeService {
     }
 
     /*
-        Chỉ cho edit ko cho thêm
-        Phải find trong repository ra nếu không thì có thể bị nhầm thành thêm
-        Có thể đối tượng chuyển đổi (entity và dto) có nhiểu trường nên tốt nhất cho mapper chuyển đổi cho nhanh
-    */
+     * Chỉ cho edit ko cho thêm
+     * Phải find trong repository ra nếu không thì có thể bị nhầm thành thêm
+     * Có thể đối tượng chuyển đổi (entity và dto) có nhiểu trường nên tốt nhất cho
+     * mapper chuyển đổi cho nhanh
+     */
     public ProductTypeDto edit(ProductTypeDto productTypeDto) {
         Integer id = productTypeDto.getId();
-        if(id == null){
+        if (id == null) {
             throw new DataNotFoundException();
         }
         ProductType productType = productTypeRepository
-            .findById(productTypeDto.getId())
-            .orElseThrow(() -> new DataNotFoundException());
-        
+                .findById(productTypeDto.getId())
+                .orElseThrow(() -> new DataNotFoundException());
+
         try {
             productType = productTypeMapper.toEntity(productTypeDto);
             productTypeRepository.save(productType);
@@ -67,12 +67,12 @@ public class ProductTypeService {
     }
 
     public ProductTypeDto delete(Integer id) {
-        if(id == null){
+        if (id == null) {
             throw new DataNotFoundException();
         }
         ProductType productType = productTypeRepository
-            .findById(id)
-            .orElseThrow(() -> new DataNotFoundException());
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException());
         try {
             productTypeRepository.delete(productType);
         } catch (Exception ex) {
@@ -89,6 +89,13 @@ public class ProductTypeService {
         } catch (Exception ex) {
             throw new CannotDeleteDataException();
         }
+        return list;
+    }
+
+    public Collection<ProductTypeDto> getByName(String name) {
+        List<ProductTypeDto> list = productTypeRepository.findByName(name).stream()
+                .map(productTypeMapper::toDto)
+                .collect(Collectors.toList());
         return list;
     }
 

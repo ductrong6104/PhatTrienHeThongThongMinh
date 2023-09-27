@@ -1,4 +1,4 @@
-package com.schoolproject.Drugstore.product.dosageform;
+package com.schoolproject.Drugstore.product.specify;
 
 import java.util.Collection;
 
@@ -19,60 +19,60 @@ import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyEx
 import com.schoolproject.Drugstore.exception.customeException.RequestNotFoundException;
 
 @RestController
-@RequestMapping("/product/dosageform")
+@RequestMapping("/product/specify")
 @RequiredArgsConstructor
 @CrossOrigin
-public class ProductDosageFormController {
+public class ProductSpecifyForController {
 
-    private final ProductDosageFormService productDosageFormService;
+    private final ProductSpecifyForService productSpecifyForService;
 
     @GetMapping("")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok().body(productDosageFormService.getAll());
+        return ResponseEntity.ok().body(productSpecifyForService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Integer id) {
-        return ResponseEntity.ok().body(productDosageFormService.getById(id));
+        return ResponseEntity.ok().body(productSpecifyForService.getById(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody(required = false) ProductDosageFormDto productDosageFormDto) {
+    public ResponseEntity<?> create(@RequestBody(required = false) ProductSpecifyForDto productSpecifyForDto) {
         // Request body empty
-        if (productDosageFormDto == null) {
+        if (productSpecifyForDto == null) {
             throw new RequestBodyEmptyException();
         }
-        ProductDosageFormDto result = productDosageFormService.create(productDosageFormDto);
+        ProductSpecifyForDto result = productSpecifyForService.create(productSpecifyForDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @PutMapping("")
-    public ResponseEntity<?> edit(@RequestBody(required = false) ProductDosageFormDto productDosageFormDto) {
-        if (productDosageFormDto == null) {
+    public ResponseEntity<?> edit(@RequestBody(required = false) ProductSpecifyForDto productSpecifyForDto) {
+        if (productSpecifyForDto == null) {
             throw new RequestBodyEmptyException();
         }
-        ProductDosageFormDto result = productDosageFormService.edit(productDosageFormDto);
+        ProductSpecifyForDto result = productSpecifyForService.edit(productSpecifyForDto);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @DeleteMapping("")
     public ResponseEntity<?> delete(@RequestParam(name = "id") Integer id) {
-        ProductDosageFormDto result = productDosageFormService.delete(id);
+        ProductSpecifyForDto result = productSpecifyForService.delete(id);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
     @DeleteMapping("/all")
     public ResponseEntity<?> delete() throws Exception {
-        Collection<ProductDosageFormDto> results = productDosageFormService.deleteAll();
+        Collection<ProductSpecifyForDto> results = productSpecifyForService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
     }
 
     // orthers
     @GetMapping("/check")
-    public ResponseEntity<?> checkDosageFormName(@RequestParam(name = "field", required = true) String field,
+    public ResponseEntity<?> checkSpecifyForName(@RequestParam(name = "field", required = true) String field,
             @RequestParam(name = "value", required = true) String value) {
         if (field.equals("name")) {
-            Collection<ProductDosageFormDto> results = productDosageFormService.getByName(value);
+            Collection<ProductSpecifyForDto> results = productSpecifyForService.getByName(value);
             return ResponseEntity.ok().body(results != null ? results : new Object());
         }
         throw new RequestNotFoundException();

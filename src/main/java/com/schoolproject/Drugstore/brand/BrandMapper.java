@@ -27,11 +27,11 @@ public class BrandMapper {
         }
 
         Nation nation = nationRepository
-                .findById(brandDto.getId())
+                .findById(brandDto.getNationId())
                 .get();
 
         Brand brand = Brand.builder()
-                .id(brandDto.getNationId())
+                .id(brandDto.getId())
                 .name(brandDto.getName())
                 .description(brandDto.getDescription())
                 .avatar(brandDto.getAvatar())

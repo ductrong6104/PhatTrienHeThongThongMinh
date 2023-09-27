@@ -8,4 +8,7 @@ import com.schoolproject.Drugstore.nation.Nation;
 
 public interface BrandRepository extends JpaRepository<Brand, Integer> {
     List<Brand> findByNation(Nation nation);
+
+    List<Brand> findByName(String name);
+
 }

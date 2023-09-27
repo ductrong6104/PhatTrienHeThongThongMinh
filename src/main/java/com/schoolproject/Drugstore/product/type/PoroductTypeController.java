@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
+import com.schoolproject.Drugstore.exception.customeException.RequestNotFoundException;
 
 @RestController
 @RequestMapping("/product/type")
@@ -26,6 +28,12 @@ public class PoroductTypeController {
 
     @GetMapping("")
     public ResponseEntity<?> getAll() {
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
         return ResponseEntity.ok().body(productTypeService.getAll());
     }
 
@@ -35,8 +43,9 @@ public class PoroductTypeController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody(required = false) ProductTypeDto productTypeDto) {
+    public ResponseEntity<?> create(@RequestBody(required = false) ProductTypeDto productTypeDto) throws Exception {
         // Request body empty
+        Thread.sleep(1000);
         if (productTypeDto == null) {
             throw new RequestBodyEmptyException();
         }
@@ -53,15 +62,31 @@ public class PoroductTypeController {
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Integer id) {
+    @DeleteMapping("")
+    public ResponseEntity<?> delete(@RequestParam(name = "id", required = true) Integer id) {
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
         ProductTypeDto result = productTypeService.delete(id);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/all")
     public ResponseEntity<?> delete() throws Exception {
         Collection<ProductTypeDto> results = productTypeService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
+    }
+
+    // orthers
+    @GetMapping("/check")
+    public ResponseEntity<?> checkTypeName(@RequestParam(name = "field", required = true) String field,
+            @RequestParam(name = "value", required = true) String value) {
+        if (field.equals("name")) {
+            Collection<ProductTypeDto> results = productTypeService.getByName(value);
+            return ResponseEntity.ok().body(results != null ? results : new Object());
+        }
+        throw new RequestNotFoundException();
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.schoolproject.Drugstore.exception.customeException.RequestBodyEmptyException;
+import com.schoolproject.Drugstore.exception.customeException.RequestNotFoundException;
 
 @RestController
 @RequestMapping("/product/category")
@@ -27,6 +28,11 @@ public class ProductCategoryController {
 
     @GetMapping("")
     public ResponseEntity<?> getAll(@RequestParam(name = "group", required = false) Integer groupId) {
+        try {
+            Thread.sleep(3000);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
         if (groupId == null)
             return ResponseEntity.ok().body(productCategoryService.getAll());
         else
@@ -57,15 +63,26 @@ public class ProductCategoryController {
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Integer id) {
+    @DeleteMapping("")
+    public ResponseEntity<?> delete(@RequestParam(name = "id", required = true) Integer id) {
         ProductCategoryDto result = productCategoryService.delete(id);
         return ResponseEntity.ok().body(result != null ? result : new Object());
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/all")
     public ResponseEntity<?> delete() throws Exception {
         Collection<ProductCategoryDto> results = productCategoryService.deleteAll();
         return ResponseEntity.ok().body(results != null ? results : new Object());
+    }
+
+    // orthers
+    @GetMapping("/check")
+    public ResponseEntity<?> checkCategoryName(@RequestParam(name = "field", required = true) String field,
+            @RequestParam(name = "value", required = true) String value) {
+        if (field.equals("name")) {
+            Collection<ProductCategoryDto> results = productCategoryService.getByName(value);
+            return ResponseEntity.ok().body(results != null ? results : new Object());
+        }
+        throw new RequestNotFoundException();
     }
 }
