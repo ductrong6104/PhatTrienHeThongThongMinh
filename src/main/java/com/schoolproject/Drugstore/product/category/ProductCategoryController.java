@@ -2,6 +2,7 @@ package com.schoolproject.Drugstore.product.category;
 
 
 
+import com.schoolproject.Drugstore.product.group.ProductGroupOperations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -16,9 +17,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/productCategorys")
 @CrossOrigin
-public class ProductCategoryController {
+public class ProductCategoryController implements ProductCategoryOperations {
     private final ProductCategoryService productCategoryService;
     private final ProductCategoryModelAssembler productCategoryModelAssembler;
     private final ProductCategoryMapperDto productCategoryMapperDto;
@@ -31,33 +32,48 @@ public class ProductCategoryController {
         this.productCategoryMapperDto = productCategoryMapperDto;
     }
 
-    @GetMapping("/productCategorys/{id}")
-    EntityModel<?> one(@PathVariable Integer id){
+    @GetMapping("/{id}")
+    public EntityModel<?> one(@PathVariable Integer id){
         ProductCategoryDto productCategoryDto = productCategoryService.getProductById(id);
         return productCategoryModelAssembler.toModel(productCategoryDto);
     }
-    @GetMapping("/productCategorys")
-    CollectionModel<EntityModel<ProductCategoryDto>> all(){
+    @GetMapping("")
+    public CollectionModel<EntityModel<ProductCategoryDto>> all(){
         List<EntityModel<ProductCategoryDto>> productCategorys = productCategoryService.getAllProducts().stream().map(productCategoryModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productCategorys, linkTo(methodOn(ProductCategoryController.class).all()).withSelfRel());
     }
 
-    @PostMapping("/productCategorys")
-    ResponseEntity<?> newProductCategory(@RequestBody ProductCategoryCreationDto productCategoryCreationDto){
+    @PostMapping("")
+    public ResponseEntity<?> newProductCategory(@RequestBody ProductCategoryCreationDto productCategoryCreationDto){
         EntityModel<ProductCategoryDto> productCategoryEntityModel = productCategoryModelAssembler.toModel(productCategoryService.addProductCategory(productCategoryCreationDto));
         return ResponseEntity.created(productCategoryEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productCategoryEntityModel);
     }
 
-    @PutMapping("productCategorys/{id}")
-    ResponseEntity<?> replaceProductCategory(@RequestBody ProductCategoryCreationDto productCategoryCreationDto, @PathVariable Integer id){
+    @PutMapping("/{id}")
+    public ResponseEntity<?> replaceProductCategory(@RequestBody ProductCategoryCreationDto productCategoryCreationDto, @PathVariable Integer id){
         ProductCategoryDto updateProductCategory = productCategoryService.updateProductCategory(productCategoryCreationDto, id);
         EntityModel<ProductCategoryDto> productCategoryEntityModel = productCategoryModelAssembler.toModel(updateProductCategory);
         return ResponseEntity.created(productCategoryEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productCategoryEntityModel);
     }
 
-    @DeleteMapping("productCategorys/{id}")
-    ResponseEntity<?> deleteProductCategory(@PathVariable Integer id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProductCategory(@PathVariable Integer id){
         productCategoryService.deleteProductCategory(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/loc-danh-muc-theo-loai")
+    @Override
+    public CollectionModel<EntityModel<ProductCategoryDto>> filterCategoryByType(Integer typeId) {
+        List<EntityModel<ProductCategoryDto>> productCategorys = productCategoryService.filterCategoryByType(typeId).stream().map(productCategoryModelAssembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(productCategorys, linkTo(methodOn(ProductCategoryController.class).all()).withSelfRel());
+    }
+
+    @GetMapping("/loc-danh-muc-theo-nhom")
+    @Override
+    public CollectionModel<EntityModel<ProductCategoryDto>> filterCategoryByGroup(Integer groupId) {
+        List<EntityModel<ProductCategoryDto>> productCategorys = productCategoryService.filterCategoryByGroup(groupId).stream().map(productCategoryModelAssembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(productCategorys, linkTo(methodOn(ProductCategoryController.class).all()).withSelfRel());
+    }
+
 }

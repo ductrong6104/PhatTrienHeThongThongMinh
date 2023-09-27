@@ -8,6 +8,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,9 +16,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/productComments")
 @CrossOrigin
-public class ProductCommentController {
+public class ProductCommentController implements ProductCommentOperations{
     private final ProductCommentService productCommentService;
     private final ProductCommentModelAssembler productCommentModelAssembler;
     private final ProductCommentMapperDto productCommentMapperDto;
@@ -30,33 +31,42 @@ public class ProductCommentController {
         this.productCommentMapperDto = productCommentMapperDto;
     }
 
-    @GetMapping("/productComments/{id}")
-    EntityModel<?> one(@PathVariable Integer id){
+    @GetMapping("/{id}")
+    public EntityModel<?> one(@PathVariable Integer id){
         ProductCommentDto productCommentDto = productCommentService.getProductCommentById(id);
         return productCommentModelAssembler.toModel(productCommentDto);
     }
-    @GetMapping("/productComments")
-    CollectionModel<EntityModel<ProductCommentDto>> all(){
+    @GetMapping("")
+    // Collection
+    public CollectionModel<EntityModel<ProductCommentDto>> all(){
+        // type ProductCommentDto
         List<EntityModel<ProductCommentDto>> productComments = productCommentService.getAllProductComments().stream().map(productCommentModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productComments, linkTo(methodOn(ProductCommentController.class).all()).withSelfRel());
     }
 
-    @PostMapping("/productComments")
-    ResponseEntity<?> newProductComment(@RequestBody ProductCommentCreationDto productCommentCreationDto){
+    @PostMapping("")
+    public ResponseEntity<?> newProductComment(@RequestBody ProductCommentCreationDto productCommentCreationDto){
         EntityModel<ProductCommentDto> productCommentEntityModel = productCommentModelAssembler.toModel(productCommentService.addProductComment(productCommentCreationDto));
+        // ma 200
         return ResponseEntity.created(productCommentEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productCommentEntityModel);
     }
 
-    @PutMapping("productComments/{id}")
-    ResponseEntity<?> replaceProductComment(@RequestBody ProductCommentCreationDto productCommentCreationDto, @PathVariable Integer id){
+    @PutMapping("/{id}")
+    public ResponseEntity<?> replaceProductComment(@RequestBody ProductCommentCreationDto productCommentCreationDto, @PathVariable Integer id){
         ProductCommentDto updateProduct = productCommentService.updateProductComment(productCommentCreationDto, id);
         EntityModel<ProductCommentDto> productCommentEntityModel = productCommentModelAssembler.toModel(updateProduct);
         return ResponseEntity.created(productCommentEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productCommentEntityModel);
     }
 
-    @DeleteMapping("productComments/{id}")
-    ResponseEntity<?> deleteProduct(@PathVariable Integer id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer id){
         productCommentService.deleteProductComment(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public CollectionModel<EntityModel<ProductCommentDto>> filterCommentByProduct(Integer productId) {
+        List<EntityModel<ProductCommentDto>> productComments = productCommentService.filterCommentByProduct(productId).stream().map(productCommentModelAssembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(productComments, linkTo(methodOn(ProductCommentController.class).all()).withSelfRel());
     }
 }

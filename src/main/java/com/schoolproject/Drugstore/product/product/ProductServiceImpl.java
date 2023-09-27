@@ -13,6 +13,7 @@ import com.schoolproject.Drugstore.product.specify.ProductSpecifyForRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.CollationElementIterator;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -105,5 +106,45 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
+    @Override
+    public Collection<ProductDto> searchProductsLikeText(String text) {
+        Collection<ProductDto> productDtos = productRepository.findByNameLike(text).stream().map(product -> productMapperDto.toDTO(product)).toList();
+        return productDtos;
+    }
 
+    @Override
+    public Collection<ProductDto> filterProductsByType(Integer typeId) {
+        Collection<ProductDto> productDtos = productRepository.filterProductsByType(typeId).stream().map(product -> productMapperDto.toDTO(product)).toList();
+        return productDtos;
+    }
+
+    @Override
+    public Collection<ProductDto> filterProductsByGroup(Integer groupId) {
+        Collection<ProductDto> productDtos = productRepository.filterProductsByGroup(groupId).stream().map(product -> productMapperDto.toDTO(product)).toList();
+        return productDtos;
+    }
+
+    @Override
+    public Collection<ProductDto> filterProductsByCategory(Integer categoryId) {
+        Collection<ProductDto> productDtos = productRepository.filterProductsByCategory(categoryId).stream().map(product -> productMapperDto.toDTO(product)).toList();
+        return productDtos;
+    }
+
+    @Override
+    public Collection<ProductDto> filterProductsByBrand(Integer brandId) {
+        Collection<ProductDto> productDtos = productRepository.filterProductsByBrand(brandId).stream().map(product -> productMapperDto.toDTO(product)).toList();
+        return productDtos;
+    }
+
+    @Override
+    public Collection<ProductDto> filterProductsByProductUseFor(Integer productUseForId) {
+        Collection<ProductDto> productDtos = productRepository.filterProductsByProductUseFor(productUseForId).stream().map(product -> productMapperDto.toDTO(product)).toList();
+        return productDtos;
+    }
+
+    @Override
+    public Collection<ProductDto> filterProductsByProductSpecifyFor(Integer productSpecifyForId) {
+        Collection<ProductDto> productDtos = productRepository.filterProductsByProductSpecifyFor(productSpecifyForId).stream().map(product -> productMapperDto.toDTO(product)).toList();
+        return productDtos;
+    }
 }

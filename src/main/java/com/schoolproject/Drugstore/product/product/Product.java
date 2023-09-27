@@ -15,6 +15,7 @@ import com.schoolproject.Drugstore.product.ingredient.ProductIngredient;
 import com.schoolproject.Drugstore.product.rate.ProductRate;
 import com.schoolproject.Drugstore.product.specify.ProductSpecifyFor;
 import com.schoolproject.Drugstore.product.unit.ProductUnit;
+import com.schoolproject.Drugstore.product.unitDetail.ProductUnitDetail;
 import com.schoolproject.Drugstore.product.use.ProductUseFor;
 
 import jakarta.persistence.CascadeType;
@@ -118,11 +119,10 @@ public class Product {
     private Collection<ProductUseFor> productUseFors;
 
     // don vi tinh
-    @ManyToMany
-    @JoinTable(name = "ProductUnitDetail", joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "productUnitId"))
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<ProductUnit> productUnits;
+    private Collection<ProductUnitDetail> productUnitDetails;
 
     // thanh phan san pham
     @ManyToMany
@@ -155,7 +155,8 @@ public class Product {
 
     // constructor to add new product
 
-    public Product(String name, String description, String uses, String userManual, String sideEffects, String storage, String note, int totalNumber, int soldNumber, ProductCategory productCategory, Brand brand, ProductDosageForm productDosageForm, Collection<ProductSpecifyFor> productSpecifyFors, Collection<ProductUseFor> productUseFors, Collection<ProductUnit> productUnits, Collection<ProductIngredient> productIngredients, Collection<ProductImage> productImages) {
+
+    public Product(String name, String description, String uses, String userManual, String sideEffects, String storage, String note, int totalNumber, int soldNumber, ProductCategory productCategory, Brand brand, ProductDosageForm productDosageForm, Collection<ProductSpecifyFor> productSpecifyFors, Collection<ProductUseFor> productUseFors, Collection<ProductUnitDetail> productUnitDetails, Collection<ProductIngredient> productIngredients,Collection<ProductImage> productImages) {
         this.name = name;
         this.description = description;
         this.uses = uses;
@@ -170,7 +171,7 @@ public class Product {
         this.productDosageForm = productDosageForm;
         this.productSpecifyFors = productSpecifyFors;
         this.productUseFors = productUseFors;
-        this.productUnits = productUnits;
+        this.productUnitDetails = productUnitDetails;
         this.productIngredients = productIngredients;
         this.productImages = productImages;
     }

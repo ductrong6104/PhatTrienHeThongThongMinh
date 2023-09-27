@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductCommentCreationDto {
+    // khong can id
     private String subject;
     private Integer customerId;
     private Integer productId;

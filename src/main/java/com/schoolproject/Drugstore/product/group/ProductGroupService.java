@@ -12,67 +12,17 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
-public class ProductGroupService {
-    private final ProductGroupRepository productGroupRepository;
-    private final ProductGroupMapperDto productGroupMapperDto;
-    private final ProductTypeRepository productTypeRepository;
+public interface ProductGroupService {
 
-    @Autowired
-    public ProductGroupService(ProductGroupRepository productGroupRepository, ProductGroupMapperDto productGroupMapperDto, ProductTypeRepository productTypeRepository) {
-        this.productGroupRepository = productGroupRepository;
-        this.productGroupMapperDto = productGroupMapperDto;
-        this.productTypeRepository = productTypeRepository;
-    }
 
-    public Collection<ProductGroupDto> getAllProducts(){
-        return productGroupRepository.findAll().stream().map(productGroup -> productGroupMapperDto.toDTO(productGroup)).toList();
-    }
+    public Collection<ProductGroupDto> getAllProducts();
 
-    public ProductGroupDto getProductById(Integer id){
-        Optional<ProductGroup> productGroup =  productGroupRepository.findById(id);
-        if (productGroup.isEmpty()){
-            throw new DataNotFoundException(id, ProductGroup.class.getSimpleName());
+    public ProductGroupDto getProductById(Integer id);
 
-        }
-        return productGroupMapperDto.toDTO(productGroupRepository.getReferenceById(id));
-    }
+    public ProductGroupDto updateProductGroup(ProductGroupCreationDto newProductGroup, Integer id);
+    public ProductGroupDto addProductGroup(ProductGroupCreationDto productGroupCreationDto);
 
-    public ProductGroupDto updateProductGroup(ProductGroupCreationDto newProductGroup, Integer id){
-        // parameter trong map se la object ma repository tim duoc
-        ProductGroup convertProductGroup = productGroupMapperDto.toProductGroup(newProductGroup);
-        ProductGroup updateProductGroup = productGroupRepository.findById(id).map(productGroup ->
-                {
-                // update productGroup existing
-                    return productGroupRepository.save(productGroup);
-                }).orElseGet(()->{
-                    // create new productGroup
-                convertProductGroup.setId(id);
-                return productGroupRepository.save(convertProductGroup);
-        });
-        return productGroupMapperDto.toDTO(updateProductGroup);
-
-    }
-    public ProductGroupDto addProductGroup(ProductGroupCreationDto productGroupCreationDto){
-        ProductGroup productGroup = productGroupMapperDto.toProductGroup(productGroupCreationDto);
-        Optional<ProductType> productType = productTypeRepository.findById(productGroupCreationDto.getTypeId());
-        if (productType.isEmpty()){
-            throw new DataNotFoundException(productGroupCreationDto.getTypeId(), ProductGroup.class.getSimpleName());
-        }
-        productGroup.setProductType(productTypeRepository.getReferenceById(productGroupCreationDto.getTypeId()));
-        productGroupRepository.save(productGroup);
-        return productGroupMapperDto.toDTO(productGroup);
-    }
-
-    public void deleteProductGroup(Integer id){
-        productGroupRepository.deleteById(id);
-    }
-    public Collection<ProductGroupDto> getProductsByTypeId(Integer typeId){
-        Collection<ProductGroup> productGroups =  productGroupRepository.getProductGroupsByTypeId(typeId);
-        if (productGroups.isEmpty()){
-            throw new DataNotFoundException(typeId, ProductGroup.class.getSimpleName());
-
-        }
-        return productGroups.stream().map(productGroup -> productGroupMapperDto.toDTO(productGroup)).toList();
-    }
+    public void deleteProductGroup(Integer id);
+    public Collection<ProductGroupDto> getProductsByTypeId(Integer typeId);
 
 }

@@ -6,15 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.customer.Customer;
 import com.schoolproject.Drugstore.product.product.Product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,10 +14,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.Date;
+
 @Entity
-@Table(name = "ProductComment", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "productId", "customerId" })
-})
+@Table(name = "ProductComment"  )
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,7 +33,8 @@ public class ProductComment {
 
     @Column(name = "subject")
     private String subject;
-
+    @Column(name ="time")
+    private Date date;
     @ManyToOne
     @JoinColumn(name = "productId")
     @EqualsAndHashCode.Exclude
@@ -54,16 +47,16 @@ public class ProductComment {
     @ToString.Exclude
     private Customer customer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "replyForId", nullable = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private ProductComment productComment;
 
-    public ProductComment(String subject, Product product, Customer customer, ProductComment productComment) {
+    public ProductComment(String subject, Date date, Product product, Customer customer) {
         this.subject = subject;
+        this.date = date;
         this.product = product;
         this.customer = customer;
-        this.productComment = productComment;
     }
 }

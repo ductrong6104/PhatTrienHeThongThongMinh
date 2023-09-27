@@ -7,6 +7,7 @@ import com.schoolproject.Drugstore.product.image.ProductImage;
 import com.schoolproject.Drugstore.product.ingredient.ProductIngredient;
 import com.schoolproject.Drugstore.product.specify.ProductSpecifyFor;
 import com.schoolproject.Drugstore.product.unit.ProductUnit;
+import com.schoolproject.Drugstore.product.unitDetail.ProductUnitDetail;
 import com.schoolproject.Drugstore.product.use.ProductUseFor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class ProductMapperDto {
     public ProductDto toDTO(Product product){
         Collection<String> productSpecifyFors = product.getProductSpecifyFors().stream().map(ProductSpecifyFor::getName).collect(Collectors.toList());
         Collection<String> productUseFors = product.getProductUseFors().stream().map(ProductUseFor::getName).collect(Collectors.toList());
-        Collection<String> productUnits = product.getProductUnits().stream().map(ProductUnit::getName).collect(Collectors.toList());
+        Collection<String> productUnits = product.getProductUnitDetails().stream().map(productUnitDetail -> productUnitDetail.getProductUnit().getName()).collect(Collectors.toList());
         Collection<String> productIngredients = product.getProductIngredients().stream().map(ProductIngredient::getName).collect(Collectors.toList());
         Collection<String> productImages = product.getProductImages().stream().map(ProductImage::getName).collect(Collectors.toList());
         return new ProductDto(
@@ -58,7 +59,7 @@ public class ProductMapperDto {
                 new ProductDosageForm(),
                 new ArrayList<ProductSpecifyFor>(),
                 new ArrayList<ProductUseFor>(),
-                new ArrayList<ProductUnit>(),
+                new ArrayList<ProductUnitDetail>(),
                 new ArrayList<ProductIngredient>(),
                 new ArrayList<ProductImage>());
         return product;

@@ -91,5 +91,8 @@ public class ProductRateServiceImpl implements ProductRateService {
         productRateRepository.deleteById(id);
     }
 
-
+    @Override
+    public Collection<ProductRateDto> filterRateByProduct(Integer productId) {
+        return productRateRepository.filterRateByProduct(productId).stream().map(productRate -> productRateMapperDto.toDTO(productRate)).toList();
+    }
 }

@@ -8,4 +8,5 @@ public interface ProductCommentService {
     public ProductCommentDto updateProductComment(ProductCommentCreationDto productUnitCreationDto, Integer id);
     public ProductCommentDto addProductComment(ProductCommentCreationDto productUnitCreationDto);
     public void deleteProductComment(Integer id);
+    public Collection<ProductCommentDto> filterCommentByProduct(Integer productId);
 }

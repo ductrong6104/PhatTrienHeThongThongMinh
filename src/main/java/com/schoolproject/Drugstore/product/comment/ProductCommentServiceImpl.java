@@ -15,7 +15,11 @@ import com.schoolproject.Drugstore.product.specify.ProductSpecifyForRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -69,30 +73,10 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     @Override
     public ProductCommentDto addProductComment(ProductCommentCreationDto productCommentCreationDto){
         ProductComment productComment = productCommentMapperDto.toProductComment(productCommentCreationDto);
-        Integer customerId = productCommentCreationDto.getCustomerId();
-        Integer productId = productCommentCreationDto.getProductId();
-
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        Optional<Product> product = productRepository.findById(productId);
-
-        if (customer.isEmpty()){
-            throw new DataNotFoundException(customerId, Customer.class.getSimpleName());
-        }
-        if (product.isEmpty()){
-            throw new DataNotFoundException(productId, Product.class.getSimpleName());
-        }
-
-        productComment.setCustomer(customerRepository.getReferenceById(customerId));
-        productComment.setProduct(productRepository.getReferenceById(productId));
-
-        Integer replyForId = productCommentCreationDto.getReplyForId();
-        assert replyForId != null : "replyForID null";
-        if (replyForId != null){
-            Optional<ProductComment> replyForComment = productCommentRepository.findById(replyForId);
-            if (replyForComment.isEmpty()){
-                throw new DataNotFoundException(replyForId, ProductComment.class.getSimpleName());
-            }
-            productComment.setProductComment(productCommentRepository.getReferenceById(replyForId));
+        productComment.setProduct(productRepository.getReferenceById(productCommentCreationDto.getProductId()));
+        productComment.setCustomer(customerRepository.getReferenceById(productCommentCreationDto.getCustomerId()));
+        if (productCommentCreationDto.getReplyForId() != null){
+            productComment.setProductComment(productCommentRepository.getReferenceById(productCommentCreationDto.getReplyForId()));
         }
 
         productCommentRepository.save(productComment);
@@ -103,5 +87,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
         productCommentRepository.deleteById(id);
     }
 
-
+    @Override
+    public Collection<ProductCommentDto> filterCommentByProduct(Integer productId) {
+        return productCommentRepository.filterCommentByProduct(productId).stream().map(productComment -> productCommentMapperDto.toDTO(productComment)).toList();
+    }
 }
