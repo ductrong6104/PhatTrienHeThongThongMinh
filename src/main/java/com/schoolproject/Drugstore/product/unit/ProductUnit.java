@@ -6,15 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.schoolproject.Drugstore.product.product.Product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import com.schoolproject.Drugstore.product.unitDetail.ProductUnitDetail;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,14 +32,13 @@ public class ProductUnit {
     @Column(name = "unitName")
     private String name;
 
-    @ManyToMany
-    @JoinTable(name = "ProductUnitDetail", joinColumns = @JoinColumn(name = "productUnitId"), inverseJoinColumns = @JoinColumn(name = "productId"))
+    @OneToMany(mappedBy = "productUnit", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<Product> products;
+    private Collection<ProductUnitDetail> productUnitDetails;
 
-    public ProductUnit(String name, Collection<Product> products) {
+    public ProductUnit(String name, Collection<ProductUnitDetail> productUnitDetails) {
         this.name = name;
-        this.products = products;
+        this.productUnitDetails = productUnitDetails;
     }
 }

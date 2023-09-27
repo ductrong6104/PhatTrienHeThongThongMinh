@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.Date;
 
 
 // use for method get, return response kieu productDto cho client thay
@@ -17,4 +18,5 @@ public class ProductCommentDto {
     private String customerName;
     private String productName;
     private String replyForComment;
+    private Date date;
 }

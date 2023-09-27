@@ -8,4 +8,5 @@ public interface ProductRateService {
     public ProductRateDto updateProductRate(ProductRateCreationDto productUnitCreationDto, Integer id);
     public ProductRateDto addProductRate(ProductRateCreationDto productUnitCreationDto);
     public void deleteProductRate(Integer id);
+    public Collection<ProductRateDto> filterRateByProduct(Integer productId);
 }

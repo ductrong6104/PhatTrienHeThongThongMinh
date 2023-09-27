@@ -17,9 +17,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/productGroups")
 @CrossOrigin
-public class ProductGroupController {
+public class ProductGroupController implements ProductGroupOperations{
     private final ProductGroupService productGroupService;
     private final ProductGroupModelAssembler productGroupModelAssembler;
     private final ProductGroupMapperDto productGroupMapperDto;
@@ -32,38 +32,38 @@ public class ProductGroupController {
         this.productGroupMapperDto = productGroupMapperDto;
     }
 
-    @GetMapping("/productGroups/{id}")
-    EntityModel<?> one(@PathVariable Integer id){
+    @GetMapping("/{id}")
+    public EntityModel<?> one(@PathVariable Integer id){
         ProductGroupDto productGroupDto = productGroupService.getProductById(id);
         return productGroupModelAssembler.toModel(productGroupDto);
     }
-    @GetMapping("/productGroups")
-    CollectionModel<EntityModel<ProductGroupDto>> all(){
+    @GetMapping("")
+    public CollectionModel<EntityModel<ProductGroupDto>> all(){
         List<EntityModel<ProductGroupDto>> productGroups = productGroupService.getAllProducts().stream().map(productGroupModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productGroups, linkTo(methodOn(ProductGroupController.class).all()).withSelfRel());
     }
 
-    @PostMapping("/productGroups")
-    ResponseEntity<?> newProductGroup(@RequestBody ProductGroupCreationDto productGroupCreationDto){
+    @PostMapping("")
+    public ResponseEntity<?> newProductGroup(@RequestBody ProductGroupCreationDto productGroupCreationDto){
         EntityModel<ProductGroupDto> productGroupEntityModel = productGroupModelAssembler.toModel(productGroupService.addProductGroup(productGroupCreationDto));
         return ResponseEntity.created(productGroupEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productGroupEntityModel);
     }
 
-    @PutMapping("productGroups/{id}")
-    ResponseEntity<?> replaceProductGroup(@RequestBody ProductGroupCreationDto productGroupCreationDto, @PathVariable Integer id){
+    @PutMapping("/{id}")
+    public ResponseEntity<?> replaceProductGroup(@RequestBody ProductGroupCreationDto productGroupCreationDto, @PathVariable Integer id){
         ProductGroupDto updateProductGroup = productGroupService.updateProductGroup(productGroupCreationDto, id);
         EntityModel<ProductGroupDto> productGroupEntityModel = productGroupModelAssembler.toModel(updateProductGroup);
         return ResponseEntity.created(productGroupEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productGroupEntityModel);
     }
 
-    @DeleteMapping("productGroups/{id}")
-    ResponseEntity<?> deleteProductGroup(@PathVariable Integer id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProductGroup(@PathVariable Integer id){
         productGroupService.deleteProductGroup(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/productGroups/typeId")
-    CollectionModel<EntityModel<ProductGroupDto>> getProductGroupsByTypeId(@RequestParam Integer typeId){
+    @GetMapping("/typeId")
+    public CollectionModel<EntityModel<ProductGroupDto>> getProductGroupsByTypeId(@RequestParam Integer typeId){
         List<EntityModel<ProductGroupDto>> productGroups = productGroupService.getProductsByTypeId(typeId).stream().map(productGroupModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productGroups, linkTo(methodOn(ProductGroupController.class).all()).withSelfRel());
     }

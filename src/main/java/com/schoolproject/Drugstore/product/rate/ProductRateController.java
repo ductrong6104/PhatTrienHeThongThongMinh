@@ -15,9 +15,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/productRates")
 @CrossOrigin
-public class ProductRateController {
+public class ProductRateController implements ProductRateOperations{
     private final ProductRateService productRateService;
     private final ProductRateModelAssembler productRateModelAssembler;
     private final ProductRateMapperDto productRateMapperDto;
@@ -30,33 +30,39 @@ public class ProductRateController {
         this.productRateMapperDto = productRateMapperDto;
     }
 
-    @GetMapping("/productRates/{id}")
-    EntityModel<?> one(@PathVariable Integer id){
+    @GetMapping("/{id}")
+    public EntityModel<?> one(@PathVariable Integer id){
         ProductRateDto productRateDto = productRateService.getProductRateById(id);
         return productRateModelAssembler.toModel(productRateDto);
     }
-    @GetMapping("/productRates")
-    CollectionModel<EntityModel<ProductRateDto>> all(){
+    @GetMapping("")
+    public CollectionModel<EntityModel<ProductRateDto>> all(){
         List<EntityModel<ProductRateDto>> productRates = productRateService.getAllProductRates().stream().map(productRateModelAssembler::toModel).collect(Collectors.toList());
         return CollectionModel.of(productRates, linkTo(methodOn(ProductRateController.class).all()).withSelfRel());
     }
 
-    @PostMapping("/productRates")
-    ResponseEntity<?> newProductRate(@RequestBody ProductRateCreationDto productRateCreationDto){
+    @PostMapping("")
+    public ResponseEntity<?> newProductRate(@RequestBody ProductRateCreationDto productRateCreationDto){
         EntityModel<ProductRateDto> productRateEntityModel = productRateModelAssembler.toModel(productRateService.addProductRate(productRateCreationDto));
         return ResponseEntity.created(productRateEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productRateEntityModel);
     }
 
-    @PutMapping("productRates/{id}")
-    ResponseEntity<?> replaceProductRate(@RequestBody ProductRateCreationDto productRateCreationDto, @PathVariable Integer id){
+    @PutMapping("/{id}")
+    public ResponseEntity<?> replaceProductRate(@RequestBody ProductRateCreationDto productRateCreationDto, @PathVariable Integer id){
         ProductRateDto updateProduct = productRateService.updateProductRate(productRateCreationDto, id);
         EntityModel<ProductRateDto> productRateEntityModel = productRateModelAssembler.toModel(updateProduct);
         return ResponseEntity.created(productRateEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(productRateEntityModel);
     }
 
-    @DeleteMapping("productRates/{id}")
-    ResponseEntity<?> deleteProduct(@PathVariable Integer id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer id){
         productRateService.deleteProductRate(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public CollectionModel<EntityModel<ProductRateDto>> filterRateByProduct(Integer productId) {
+        List<EntityModel<ProductRateDto>> productRates = productRateService.filterRateByProduct(productId).stream().map(productRateModelAssembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(productRates, linkTo(methodOn(ProductRateController.class).all()).withSelfRel());
     }
 }
